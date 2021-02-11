@@ -29,5 +29,8 @@ mySpotify <- mySpotify %>%
   relocate(playCount, .after = trackName) %>%
   relocate(trackName, .before = artistName)
 
+#Remove all duplicates
 
+mySpotify <- mySpotify %>%
+  distinct(trackName, artistName, .keep_all = TRUE)
     
