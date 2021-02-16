@@ -1,0 +1,17 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+Project Notes
+
+This will be where you can write/add your notes to help keep yourself more organised
+
+Offline_stream_history is where you have the data of your spotify stream history. You did some cleaning to make the DF more useful.  
+
+
+
+
+
+
+

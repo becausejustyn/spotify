@@ -1,0 +1,155 @@
+---
+title: "offline_stream_history_graphs"
+author: "Justyn"
+date: "2/16/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+
+
+Playback Activity Per Week and Hours
+```{r cache = TRUE}
+streamingHours <- mySpotify %>% 
+  filter(date >= "2020-01-01") %>% 
+  group_by(date) %>% 
+  group_by(date = floor_date(date, "week")) %>%
+  summarize(hours = sum(minutes) / 60) %>% 
+  arrange(date) %>% 
+  ggplot(aes(x = date, y = hours)) + 
+  geom_col(aes(fill = hours)) +
+  scale_fill_gradient(low = "yellow", high = "red") + 
+  labs(x= "Date", y= "Hours of music playback") + 
+  ggtitle("On what dates I've listened to more or less music on Spotify?", "Playback activity per week")
+
+streamingHours
+```
+
+
+Playback Activity Per Specific Artist #Not a huge fan of this. 
+```{r cache = TRUE}
+hoursArtist <- mySpotify %>% 
+  group_by(artistName, date = floor_date(date, "month")) %>% 
+  summarize(hours = sum(minutes) / 60) %>% 
+  ggplot(aes(x = date, y = hours, group = artistName)) + 
+  labs(x= "Date", y= "Hours of music playback") + 
+  ggtitle("On what dates I've listened to more or less music by a specific artist?", "E.g: Alton Ellis and Jarabe de Palo") +
+  geom_line() + 
+  gghighlight(artistName == "Alton Ellis" || artistName == "Jarabe De Palo")
+
+hoursArtist
+```
+
+
+Most Listened Artist (More Than 3 Hours)
+```{r cache = TRUE}
+minutesMostListened <- mySpotify %>% 
+  filter(date >= "2020-01-01") %>% 
+  group_by(artistName) %>% 
+  summarize(minutesListened = sum(minutes)) %>% 
+  filter(minutesListened >= 180) %>%
+  ggplot(aes(x = artistName, y = minutesListened)) + 
+  geom_col(aes(fill = minutesListened)) +
+  scale_fill_gradient(low = "yellow", high = "red") + 
+  labs(x= "Artist", y= "Minutes of music playback") + 
+  ggtitle("What were the most listened artists on my Spotify?", "> 3 hours listened") +
+  theme(axis.text.x = element_text(angle = 90))
+
+minutesMostListened
+```
+
+
+
+Playback Activity By Date and Time of Day
+```{r cache = TRUE}
+timeDay <- mySpotify %>% 
+  filter(date >= "2020-01-01") %>% 
+  group_by(date, hour = hour(endTime)) %>% 
+  summarize(minutesListened = sum(minutes)) %>% 
+  ggplot(aes(x = hour, y = date, fill = minutesListened)) + 
+  geom_tile() + 
+  labs(x= "Time of the day", y= "Date") + 
+  ggtitle("When has there been more playback activity on my Spotify?", "Activity by date and time of day") +
+  scale_fill_gradient(low = "yellow", high = "red")
+
+timeDay
+```
+
+
+Playback Activity By Time of Day
+```{r cache = TRUE}
+hoursDay <- mySpotify %>% 
+  filter(date >= "2019-01-01") %>% 
+  group_by(date, hour = hour(endTime), weekday = wday(date, label = TRUE))%>% 
+  summarize(minutesListened = sum(minutes))
+
+hoursDay %>% 
+  ggplot(aes(x = hour, y = minutesListened, group = date)) + 
+  geom_col(fill = "#ff6600") +
+  labs(x= "Time of the day", y= "Minutes of music playback") + 
+  ggtitle("What time of day I've listened to the most music on Spotify?", "Activity from 0 to 24 hours")
+```
+
+
+
+Playback Activity By Time of Day and Weekday
+```{r cache = TRUE}
+hoursDay %>% 
+  group_by(weekday, hour) %>% 
+  summarize(minutes = sum(minutesListened)) %>% 
+  ggplot(aes(x = hour, weekday, fill = minutes)) + 
+  geom_tile() + 
+  scale_fill_gradient(low = "yellow", high = "red") +
+  labs(x= "Time of the day", y= "Weekday") + 
+  ggtitle("What weekday and time of day I've listened to the most music on Spotify?", "Weekly activity from 0 to 24 hours")
+```
+
+
+Playback Activity By Time of Day and Weekday - Linechart
+```{r cache = TRUE}
+weekDay <- hoursDay %>% 
+  group_by(weekday, hour) %>% 
+  summarize(minutes = sum(minutesListened)) %>% 
+  ggplot(aes(x = hour, y = minutes, color = weekday)) + 
+  geom_line() +
+  labs(x= "Time of the day", y= "Minutes of music playback") + 
+  ggtitle("What weekday and time of day I've listened to the most music on Spotify?", "Line chart - Weekly activity from 0 to 24 hours") 
+```
+
+
+Playback Activity By Day Type
+```{r cache = TRUE}
+dayType <- hoursDay %>% 
+  mutate(day_type = if_else(weekday %in% c("Sat", "Sun"), "weekend", "weekday")) %>% 
+  group_by(day_type, hour) %>% 
+  summarize(minutes = sum(minutesListened)) %>% 
+  ggplot(aes(x = hour, y = minutes, color = day_type)) + 
+  geom_line() +
+  labs(x= "Time of the day", y= "Minutes of music playback") + 
+  ggtitle("What day type I've listened to the most music on Spotify?", "Weekday and weekend activity from 0 to 24 hours") 
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

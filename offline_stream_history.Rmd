@@ -1,0 +1,74 @@
+---
+title: "offline_stream_history"
+author: "Justyn"
+date: "2/16/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+
+```{r cars}
+library(jsonlite)
+library(lubridate)
+library(gghighlight)
+#library(spotifyr) #don't need for this
+library(tidyverse)
+library(knitr)
+library(ggplot2)
+library(plotly)
+```
+
+## Including Plots
+
+Copy of your data from Spotify
+```{r}
+streamHistory <- fromJSON("C:/Users/justy/Downloads/spotify-main/spotify-main/StreamingHistory0.json", flatten = TRUE)
+
+head(streamHistory)
+```
+
+## Tidy the Data
+
+Check for missing data
+```{r}
+sum(is.na(streamHistory))
+```
+
+
+Create column of counts, removed duplicates
+```{r}
+mySpotify <- streamHistory %>%
+  group_by(artistName) %>%
+  add_count(trackName, name = "playCount") %>%
+  distinct(trackName, .keep_all = TRUE) %>%
+  dplyr::ungroup(artistName)
+```
+
+
+Adding date, time
+```{r}
+mySpotify <- mySpotify %>%
+  mutate_at("endTime", ymd_hm) %>%
+  mutate(endTime = endTime - hours(6)) %>%
+  mutate(date = floor_date(endTime, "day") %>%
+           as_date, seconds = msPlayed / 1000, minutes = seconds / 60)
+```
+
+
+Moved columns
+```{r}
+mySpotify <- mySpotify %>%
+  relocate(endTime, .after = minutes) %>%
+  relocate(playCount, .after = trackName) %>%
+  relocate(trackName, .before = artistName)
+```
+
+
+```{r}
+mySpotify
+```

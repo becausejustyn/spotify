@@ -1,0 +1,179 @@
+---
+title: "Spotifyr_start"
+author: "Justyn"
+date: "2/16/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+He
+
+```{r}
+library(jsonlite)
+library(lubridate)
+library(gghighlight)
+library(spotifyr)
+library(tidyverse)
+library(knitr)
+library(ggplot2)
+library(plotly)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r}
+Sys.setenv(SPOTIFY_CLIENT_ID = "052dec7a99bd42e888548b0f32f5d444")
+Sys.setenv(SPOTIFY_CLIENT_SECRET = "3e61d71877f2486fa2a17c703eb452a6")
+access_token <- get_spotify_access_token(client_id = Sys.getenv('SPOTIFY_CLIENT_ID'), 
+                                         client_secret = Sys.getenv('SPOTIFY_CLIENT_SECRET'))
+```
+
+
+
+```{r}
+playlist_username <- 'b7iflt2s6um28zx952r2rp1q9'
+```
+
+
+
+
+GET SPECIFIC PLAYLIST FEATURES - on repeat 37i9dQZF1EpljHGqh75Ggn
+```{r}
+playlist_uris <- c('37i9dQZF1EpljHGqh75Ggn')
+playlistOnRepeat <- get_playlist_audio_features(playlist_username, playlist_uris)
+```
+
+
+GET SPECIFIC PLAYLIST FEATURES - repeat rewind 37i9dQZF1EpNiqXss6LbGe
+```{r}
+playlist_uris <- c('37i9dQZF1EpNiqXss6LbGe')
+playlistRepeatRewind <- get_playlist_audio_features(playlist_username, playlist_uris)
+```
+
+
+GET SPECIFIC PLAYLIST FEATURES - top songs 2020 37i9dQZF1EM7wA9HfN3vt4
+```{r}
+playlist_uris <- c('37i9dQZF1EM7wA9HfN3vt4')
+playlistTop2020 <- get_playlist_audio_features(playlist_username, playlist_uris)
+```
+
+
+PLOT LESS POPULARITY TRACKS ON SPECIFIC PLAYLIST
+```{r}
+playlistOnRepeat %>% 
+  group_by(track.popularity) %>% 
+  filter(track.popularity <= "35") %>%
+  ggplot(aes(x = track.name, y = track.popularity)) + 
+  geom_col(aes(fill = track.album.name)) +
+  labs(x= "Track name", y= "Popularity") + 
+  ggtitle("What are the least popular songs I listen to on Spotify?", "Popularity ranking < 35 in a specific playlist") +
+  theme(axis.text.x = element_text(angle = 90))
+```
+
+
+
+df_new <- df_new %>%
+  mutate(popularity_class=case_when(
+    track.popularity >= 1 & track.popularity <= 20 ~ "E",
+    track.popularity > 20 & track.popularity <= 40 ~ "D",
+    track.popularity > 40 & track.popularity <= 60 ~ "C",
+    track.popularity > 60 & track.popularity <= 80 ~ "B",
+    track.popularity > 80 & track.popularity <= 100 ~ "A"))
+
+###
+library(ggjoy)
+
+ggplot(joy, aes(x = valence, y = album_name)) + 
+  geom_joy() + 
+  theme_joy() +
+  ggtitle("Joyplot of Joy Division's joy distributions", 
+          subtitle = "Based on valence pulled from Spotify's Web API with spotifyr")
+
+ 
+library(ggplot2)
+library(dplyr)
+library(ggpubr)
+library(reshape2)
+
+
+ggplot(df_new, aes(x = acousticness, y = track.popularity, color = popularity_class))+ 
+  theme_bw()+ 
+  geom_point()+
+  scale_color_discrete(name="Category of Popularity", labels=c("A-Popularity > 80","B-Popularity > 60","C-Popularity > 40","D-Popularity > 20","E-Popularity > 1"))+
+  labs(x = "Acousticness of track",
+       y = "Popularity of track",
+       title = "Popularity Vs Acousticness")
+
+df_new$ID <- seq.int(nrow(df_new))
+
+t_c <- sapply(df_new$ID, function(elem){
+  if (elem <= 20){return("A")}
+  else if(elem <= 40){return("B")}
+  else if(elem <= 60){return("C")}
+  else if(elem <= 70){return("D")}
+  else if(elem <= 100){return("E")}
+})
+
+
+df_new <- mutate( df_new, top_class = t_c)
+
+Top tracks wise Energy Distribution
+```{r}
+t_energy <- ggplot(df_new, aes(x = energy, fill = top_class))+
+  theme_bw() +
+  geom_density( alpha= 0.3) +
+  scale_fill_discrete(name="Category(Index Wise)", labels=c("A-Song(1-20)","B-Song(20-40)","C-Song(41-60)","D-Song(61-80)","E-Song(81-100)"))+
+  labs( x ="Energy of tracks",
+        title = "Distribution of Enerygy")
+```
+
+
+Top tracks wise acoustic-ness Distribution
+```{r}
+t_acoustic <- ggplot(df_new, aes(x = acousticness, fill = top_class))+
+  theme_bw() +
+  geom_density( alpha= 0.3) +
+  scale_fill_discrete(name="Category(Index Wise)", labels=c("A-Song(1-20)","B-Song(20-40)","C-Song(41-60)","D-Song(61-80)","E-Song(81-100)"))+
+  labs( x ="acousticness of tracks",
+        title = "Distribution of Acousticness")
+```
+
+
+Top tracks wise loudness Distribution
+```{r}
+t_loudness <- ggplot(df_new, aes(x = loudness, fill = top_class))+
+  theme_bw() +
+  geom_density( alpha= 0.3) +
+  scale_fill_discrete(name="Category(Index Wise)", labels=c("A-Song(1-20)","B-Song(20-40)","C-Song(41-60)","D-Song(61-80)","E-Song(81-100)"))+
+  labs( x ="Loudness of tracks",
+        title = "Distribution of Loudness")
+```
+
+Top tracks wise Popularity Distribution
+```{r}
+t_popularity <- ggplot(df_new, aes(x = track.popularity, fill = top_class))+
+  theme_bw() +
+  geom_density( alpha= 0.3) +
+  scale_fill_discrete(name="Category(Index Wise)", labels=c("A-Song(1-20)","B-Song(20-40)","C-Song(41-60)","D-Song(61-80)","E-Song(81-100)"))+
+  labs( x ="Popularity of tracks",
+        title = "Distribution of Popularity")
+```
+
+
+
+
+figure <- ggarrange(t_energy, t_loudness, t_acoustic, t_popularity,
+                    labels = c("A", "B", "C","D"),
+                    ncol = 2, nrow = 2)
+
+
+
+
+
