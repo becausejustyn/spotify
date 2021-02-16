@@ -1,0 +1,57 @@
+---
+title: "spotifyr_plotting"
+author: "Justyn Rodrigues"
+date: "16/02/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Load
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+
+
+GET FEATURES TOP FOUR FAVORITE ARTISTS
+```{r}
+favArtist1 <- get_artist_audio_features(artist= "Brian Fallon")
+favArtist2 <- get_artist_audio_features(artist= "The Gaslight Anthem")
+favArtist3 <- get_artist_audio_features(artist= "Modest Mouse")
+favArtist4 <- get_artist_audio_features(artist= "The Wonder Years")
+```
+
+
+MAKE A SINGLE DATA FRAME
+```{r}
+topFourArtists <- rbind(favArtist1, favArtist2, favArtist3, favArtist4)
+```
+
+
+PLOT EMOTIONAL QUADRANT TOP FOUR ARTISTS
+```{r}
+emotionalQuadrant <- ggplot(data = topFourArtists, aes(x = valence, y = energy, color = artist_name)) +
+  geom_jitter() +
+  geom_vline(xintercept = 0.5) +
+  geom_hline(yintercept = 0.5) +
+  scale_x_continuous(expand = c(0, 0), limits = c(0, 1)) +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 1)) +
+  annotate('text', 0.25 / 2, 0.95, label = "Angry / Turbulent") +
+  annotate('text', 1.75 / 2, 0.95, label = "Joyful / Happy") +
+  annotate('text', 1.75 / 2, 0.05, label = "Peace / Chill") +
+  annotate('text', 0.25 / 2, 0.05, label = "Depressing / Sad") +
+  labs(x= "Valence", y= "Energy") +
+  ggtitle("Emotional quadrant Top four artists", "Based on energy y valence")  
+```
+
