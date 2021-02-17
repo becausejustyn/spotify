@@ -40,46 +40,12 @@ sum(is.na(streamHistory))
 ```
 
 
-Create column of counts, removed duplicates
-```{r}
-mySpotify <- streamHistory %>%
-  group_by(artistName) %>%
-  add_count(trackName, name = "playCount") %>%
-  distinct(trackName, .keep_all = TRUE) %>%
-  dplyr::ungroup(artistName)
-```
-
-
-Adding date, time
-```{r}
-mySpotify <- mySpotify %>%
-  mutate_at("endTime", ymd_hm) %>%
-  mutate(endTime = endTime - hours(6)) %>%
-  mutate(date = floor_date(endTime, "day") %>%
-           as_date, seconds = msPlayed / 1000, minutes = seconds / 60)
-```
-
-
-Moved columns
-```{r}
-mySpotify <- mySpotify %>%
-  relocate(endTime, .after = minutes) %>%
-  relocate(playCount, .after = trackName) %>%
-  relocate(trackName, .before = artistName)
-```
-
-
-```{r}
-mySpotify
-```
-
-
 
 Here you combined the total play time before you reduced it.
 ```{r}
 head(mySpotify1)
 
-mySpotify1 <- streamHistory %>%
+mySpotify <- streamHistory %>%
   mutate_at("endTime", ymd_hm) %>%
   mutate(endTime = endTime - hours(6)) %>%
   mutate(date = floor_date(endTime, "day") %>%
@@ -94,12 +60,49 @@ mySpotify1 <- streamHistory %>%
 
 
 ```{r}
-mySpotify1 <- mySpotify1 %>%
+mySpotify <- mySpotify %>%
   relocate(endTime, .after = minutes) %>%
   relocate(playCount, .after = artistName) %>%
   relocate(trackName, .before = artistName) %>%
   relocate(totalTime, .before = endTime) %>%
   relocate(date, .after = totalTime)
 ```
+
+
+
+Artist DF with
+ArtistName
+Total time MS
+Total time minutes
+Total artist playcount
+```{r}
+mySpotifyArtist <- streamHistory %>%
+   mutate_at("endTime", ymd_hm) %>%
+  mutate(endTime = endTime - hours(6)) %>%
+  mutate(date = floor_date(endTime, "day") %>%
+           as_date, seconds = msPlayed / 1000, minutes = seconds / 60)
+
+
+mySpotifyArtist <- mySpotifyArtist %>%
+  group_by(artistName) %>%
+  summarise(totaltimeMS = sum(msPlayed), totalTimeMinutes = sum(minutes), totalPlays = n()) %>%
+  arrange(-totalPlays)
+  
+  
+```
+
+
+
+
+
+
+
+
+
+```{r}
+
+```
+
+
 
 
