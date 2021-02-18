@@ -10,8 +10,135 @@ This will be where you can write/add your notes to help keep yourself more organ
 Offline_stream_history is where you have the data of your spotify stream history. You did some cleaning to make the DF more useful.  
 
 
+If you want to analyse specifics of the music, use spotifyr
+Check the differences for
+
+Short
+```{r}
+get_my_top_artists_or_tracks(type = tracks, limit = 50,
+  time_range = "short_term",
+  authorization = get_spotify_authorization_code(),
+  include_meta_info = TRUE) #play around with these
+```
+
+Medium
+```{r}
+get_my_top_artists_or_tracks(type = tracks, limit = 50,
+  time_range = "medium_term",
+  authorization = get_spotify_authorization_code(),
+  include_meta_info = TRUE) #play around with these
+```  
+
+Long
+```{r}
+get_my_top_artists_or_tracks(type = tracks, limit = 50,
+  time_range = "long_term",
+  authorization = get_spotify_authorization_code(),
+  include_meta_info = TRUE) #play around with these
+```
+
+get_my_recently_played(limit = 50,
+  authorization = get_spotify_authorization_code(),
+  include_meta_info = TRUE)
+
+
+get_playlist_audio_features(username, playlist_uris,
+  authorization = get_spotify_access_token())
 
 
 
+Artist/Albums
 
+Any artists you want to compare against each other
+Albums from an artist you want to compare
 
+Compare TGA's albums
+Modest Mouse
+Ryan Adams
+
+mySpotify
+
+```{r}
+mySpotify %>%
+  arrange(-playCount)
+```
+track_num_artist %>%
+  mutate(
+    freq = case_when(
+      n > 100 ~ 'More than 100 tracks',
+      between(n, 50, 99) ~ '50~99 tracks',
+      between(n, 20, 49) ~ '20~49 tracks',
+      TRUE ~ 'Less than 20 tracks'
+    )
+  ) %>%
+  mutate(freq = factor(
+    freq,
+    levels = c(
+      'More than 100 tracks',
+      '50~99 tracks',
+      '20~49 tracks',
+      'Less than 20 tracks'
+    )
+    ))
+  
+
+```{r}
+mySpotifyArtist20 <- mySpotifyArtist %>%
+  select(artistName, playCount) %>%
+  rename(n=playCount) %>%
+  top_n(20, n)
+```
+
+```{r}
+mySpotifyArtist10 <- mySpotifyArtist %>%
+  select(artistName, playCount) %>%
+  rename(n=playCount) %>%
+  top_n(10, n) %>%
+  arrange(-n)
+```
+
+    
+```{r}
+mySpotifyArtist10 %>%
+  mutate(
+    freq = case_when(
+      n > 100 ~ 'More than 100 tracks',
+      between(n, 50, 99) ~ '50~99 tracks',
+      between(n, 20, 49) ~ '20~49 tracks',
+      TRUE ~ 'Less than 20 tracks'
+    )
+  ) %>%
+  mutate(freq = factor(
+    freq,
+    levels = c(
+      'More than 100 tracks',
+      '50~99 tracks',
+      '20~49 tracks',
+      'Less than 20 tracks'
+    )
+  )) %>%
+  ggplot(mapping = aes(
+    x = reorder(artistName, -n),
+    y = n,
+    fill = freq
+  )) +
+  geom_col() +
+  labs(fill = NULL,title = 'Who is My Favorite Artist',caption = 'data from spotify via spotify') +
+  xlab('Artist') +
+  ylab('Tracks Number') +
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = -45),
+        axis.title = element_text(face = 'bold'),
+        plot.title = element_text(hjust = -0.5, face = 'bold', size = 15),
+        plot.caption = element_text(hjust = 1,face = 'bold.italic')) 
+
+    
+```
+
+```{r}
+p.color <- ggplot(data = mySpotifyArtist10, mapping = aes(x = reorder(artistName, -n), y = n, color = n)) 
+p.color+geom_col(aes(fill = n) )+ scale_color_gradient()
+```
+
+lintr
+styler

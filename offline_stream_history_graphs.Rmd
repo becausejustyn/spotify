@@ -11,11 +11,31 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## R Markdown
 
+Redo these graphs with the new data, save them with HQ
+Compare your df with changing it from long to wide
+
+```{r}
+library(jsonlite)
+library(lubridate)
+library(gghighlight)
+library(spotifyr)
+library(tidyverse)
+library(knitr)
+library(ggplot2)
+library(plotly)
+```
+
 
 
 Playback Activity Per Week and Hours
 ```{r cache = TRUE}
-streamingHours <- mySpotify %>% 
+mySpotify_hours <- streamHistory %>% 
+  as_tibble() %>% 
+  mutate_at("endTime", ymd_hm) %>% 
+  mutate(endTime = endTime - hours(6)) %>% 
+  mutate(date = floor_date(endTime, "day") %>% as_date, seconds = msPlayed / 1000, minutes = seconds / 60)
+
+streamingHours <- mySpotify_hours %>% 
   filter(date >= "2020-01-01") %>% 
   group_by(date) %>% 
   group_by(date = floor_date(date, "week")) %>%
@@ -27,42 +47,64 @@ streamingHours <- mySpotify %>%
   labs(x= "Date", y= "Hours of music playback") + 
   ggtitle("On what dates I've listened to more or less music on Spotify?", "Playback activity per week")
 
-streamingHours
+ggsave("playback_activity_week.png", path = "~/Desktop/Github/spotify/plots")
 ```
 
 
 Playback Activity Per Specific Artist #Not a huge fan of this. 
 ```{r cache = TRUE}
-hoursArtist <- mySpotify %>% 
+hoursArtist <- mySpotify_hours %>% 
   group_by(artistName, date = floor_date(date, "month")) %>% 
   summarize(hours = sum(minutes) / 60) %>% 
-  ggplot(aes(x = date, y = hours, group = artistName)) + 
+  ggplot(aes(x = date, y = hours, group = artistName, colour = artistName)) + 
   labs(x= "Date", y= "Hours of music playback") + 
-  ggtitle("On what dates I've listened to more or less music by a specific artist?", "E.g: Alton Ellis and Jarabe de Palo") +
+  ggtitle("On what dates I've listened to more or less music by a specific artist?", "E.g: The Gaslight Anthem and Modest Mouse") +
   geom_line() + 
-  gghighlight(artistName == "Alton Ellis" || artistName == "Jarabe De Palo")
+  gghighlight(artistName == "The Gaslight Anthem" || artistName == "Brian Fallon")
 
 hoursArtist
 ```
 
 
 Most Listened Artist (More Than 3 Hours)
+
 ```{r cache = TRUE}
-minutesMostListened <- mySpotify %>% 
+minutesMostListened <- mySpotify_hours %>% 
   filter(date >= "2020-01-01") %>% 
   group_by(artistName) %>% 
   summarize(minutesListened = sum(minutes)) %>% 
   filter(minutesListened >= 180) %>%
-  ggplot(aes(x = artistName, y = minutesListened)) + 
+  ggplot(aes(
+    x = reorder(artistName, -minutesListened), 
+    y = minutesListened)) + 
   geom_col(aes(fill = minutesListened)) +
   scale_fill_gradient(low = "yellow", high = "red") + 
   labs(x= "Artist", y= "Minutes of music playback") + 
   ggtitle("What were the most listened artists on my Spotify?", "> 3 hours listened") +
   theme(axis.text.x = element_text(angle = 90))
 
+ggsave("artist_more_3_hours.png", path = "~/Desktop/Github/spotify/plots")
+
 minutesMostListened
 ```
+```{r cache=TRUE}
 
+minutesMostListened1 <- mySpotify_hours %>% 
+  filter(date >= "2020-01-01") %>% 
+  group_by(artistName) %>% 
+  summarise(playcount = n()) %>% 
+  filter(playcount >= 70) %>%
+  ggplot(aes(
+    x = reorder(artistName, -playcount), 
+    y = playcount)) + 
+  geom_col(aes(fill = playcount)) +
+  scale_fill_gradient(low = "yellow", high = "red") + 
+  labs(x= "Artist", y= "Minutes of music playback") + 
+  ggtitle("What were the most listened artists on my Spotify?", "> 70 plays") +
+  theme(axis.text.x = element_text(angle = 90))
+
+ggsave("artist_more_70_plays.png", path = "~/Desktop/Github/spotify/plots")
+```
 
 
 Playback Activity By Date and Time of Day
@@ -78,6 +120,8 @@ timeDay <- mySpotify %>%
   scale_fill_gradient(low = "yellow", high = "red")
 
 timeDay
+
+ggsave("activity_date_time.png", path = "~/Desktop/Github/spotify/plots")
 ```
 
 
@@ -93,6 +137,8 @@ hoursDay %>%
   geom_col(fill = "#ff6600") +
   labs(x= "Time of the day", y= "Minutes of music playback") + 
   ggtitle("What time of day I've listened to the most music on Spotify?", "Activity from 0 to 24 hours")
+
+ggsave("activity_time_of_day_bar.png", path = "~/Desktop/Github/spotify/plots")
 ```
 
 
@@ -107,6 +153,8 @@ hoursDay %>%
   scale_fill_gradient(low = "yellow", high = "red") +
   labs(x= "Time of the day", y= "Weekday") + 
   ggtitle("What weekday and time of day I've listened to the most music on Spotify?", "Weekly activity from 0 to 24 hours")
+
+ggsave("activity_day_plus_time_tile.png", path = "~/Desktop/Github/spotify/plots")
 ```
 
 
