@@ -1,0 +1,280 @@
+---
+title: "spotifyr_plotting"
+author: "Justyn Rodrigues"
+date: "16/02/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Load
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+
+
+GET FEATURES TOP FOUR FAVORITE ARTISTS
+```{r}
+favArtist1 <- get_artist_audio_features(artist= "Buckethead")
+favArtist2 <- get_artist_audio_features(artist= "Dream Theater")
+favArtist3 <- get_artist_audio_features(artist= "Silver Jews")
+favArtist4 <- get_artist_audio_features(artist= "Animals as Leaders")
+
+buckethead <- get_artist_audio_features(artist= "Buckethead")
+dreamtheater <- get_artist_audio_features(artist= "Dream Theater")
+silverjews <- get_artist_audio_features(artist= "Silver Jews")
+animalsasleaders <- get_artist_audio_features(artist= "Animals as Leaders")
+smashingpum <- get_artist_audio_features(artist= "The Smashing Pumpkins")
+bruce <- get_artist_audio_features(artist= "Bruce Springsteen")
+maiden <- get_artist_audio_features(artist= "Iron Maiden")
+direstraits <- get_artist_audio_features(artist= "Dire Straits")
+TWY <- get_artist_audio_features(artist= "The Wonder Years")
+MM <- get_artist_audio_features(artist= "Modest Mouse")
+Brian <- get_artist_audio_features(artist= "Brian Fallon")
+TGA <- get_artist_audio_features(artist= "The Gaslight Anthem")
+
+
+```
+
+
+MAKE A SINGLE DATA FRAME
+```{r}
+favArtist <- rbind(Brian, MM, TGA)
+allArtist <- rbind(Brian, MM, TGA, TWY, direstraits, maiden, bruce, smashingpum, animalsasleaders, silverjews, dreamtheater, buckethead)
+                   
+
+```
+
+
+PLOT EMOTIONAL QUADRANT TOP FOUR ARTISTS
+```{r}
+emotionalQuadrant <- ggplot(data = favArtist, aes(x = valence, y = energy, color = artist_name, label = track_name)) +
+  geom_jitter() +
+  geom_vline(xintercept = 0.5) +
+  geom_hline(yintercept = 0.5) +
+  scale_x_continuous(expand = c(0, 0), limits = c(-0.02, 1)) +
+  scale_y_continuous(expand = c(0, 0), limits = c(-0.02, 1.04)) +
+  annotate('text', 0.25 / 2, 0.95, label = "Angry / Turbulent") +
+  annotate('text', 1.75 / 2, 0.95, label = "Joyful / Happy") +
+  annotate('text', 1.75 / 2, 0.05, label = "Peace / Chill") +
+  annotate('text', 0.25 / 2, 0.05, label = "Depressing / Sad") +
+  labs(x= "Valence", y= "Energy") +
+  ggtitle("Emotional quadrant Top four artists", "Based on energy y valence")
+
+emotionalQuadrant
+ggplotly()
+
+```
+
+```{r}
+emotionalQuadrant <- ggplot(data = favArtist, aes(x = valence, y = energy, color = artist_name, label = track_name)) +
+  geom_jitter() +
+  geom_vline(xintercept = 0.5) +
+  geom_hline(yintercept = 0.5) +
+  scale_x_continuous(expand = c(0, 0), limits = c(-0.02, 1)) +
+  scale_y_continuous(expand = c(0, 0), limits = c(-0.02, 1.04)) +
+  annotate('text', 0.25 / 2, 0.95, label = "Angry / Turbulent") +
+  annotate('text', 1.75 / 2, 0.95, label = "Joyful / Happy") +
+  annotate('text', 1.75 / 2, 0.05, label = "Peace / Chill") +
+  annotate('text', 0.25 / 2, 0.05, label = "Depressing / Sad") +
+  labs(x= "Valence", y= "Energy") +
+  ggtitle("Emotional quadrant Top four artists", "Based on energy y valence")
+
+emotionalQuadrant
+ggplotly()
+ggsave("quad_brian_MM_TGA.png", path = "~/Desktop/Github/spotify/plots")
+
+```
+```{r}
+emotionalQuadrant <- ggplot(data = TGA, aes(x = energy, y = danceability, color = artist_name, label = track_name)) +
+  geom_jitter() +
+  geom_vline(xintercept = 0.5) +
+  geom_hline(yintercept = 0.5) +
+  scale_x_continuous(expand = c(0, 0), limits = c(0, 1)) +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 1)) +
+  annotate('text', 0.25 / 2, 0.95, label = "Angry / Turbulent") +
+  annotate('text', 1.75 / 2, 0.95, label = "Joyful / Happy") +
+  annotate('text', 1.75 / 2, 0.05, label = "Peace / Chill") +
+  annotate('text', 0.25 / 2, 0.05, label = "Depressing / Sad") +
+  labs(x= "Energy", y= "Danceability") +
+  ggtitle("Emotional quadrant Top four artists", "Based on energy y valence")
+
+emotionalQuadrant
+ggplotly()
+
+```
+
+
+
+```{r}
+emotionalQuadrant <- ggplot(data = buckethead, aes(x = valence, y = energy, color = artist_name)) +
+  geom_jitter() +
+  geom_vline(xintercept = 0.5) +
+  geom_hline(yintercept = 0.5) +
+  scale_x_continuous(expand = c(0, 0), limits = c(0, 1)) +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 1)) +
+  annotate('text', 0.25 / 2, 0.95, label = "Angry / Turbulent") +
+  annotate('text', 1.75 / 2, 0.95, label = "Joyful / Happy") +
+  annotate('text', 1.75 / 2, 0.05, label = "Peace / Chill") +
+  annotate('text', 0.25 / 2, 0.05, label = "Depressing / Sad") +
+  labs(x= "Valence", y= "Energy") +
+  ggtitle("Emotional quadrant Top four artists", "Based on energy y valence")  
+```
+
+
+library(corrplot)
+```{r}
+corrplot(res, type = "upper", order = "hclust", 
+         tl.col = "black", tl.srt = 45)
+
+
+TGA_sub <- #subset data 
+  
+  
+
+#Heatmap
+
+# Get some colors
+col<- colorRampPalette(c("blue", "white", "red"))(20)
+heatmap(x = favArtist, col = kp_cols, symm = TRUE)
+
+favArtist %>%
+  select(tempo, energy, valence, danceability, key, loudness, instrumentalness) %>%
+  scale() %>%
+  cor() %>%
+  heatmap()
+
+favArtist %>%
+  select(tempo, energy, valence, danceability, key, loudness, instrumentalness) %>%
+  rquery.cormat()
+  
+rquery.cormat(mydata, type="flatten", graph=FALSE)
+
+```
+
+```{r}
+recordPlot()
+
+favArtist %>%
+  select(tempo, energy, valence, danceability, key, loudness, instrumentalness) %>%
+  scale() %>%
+  cor() %>%
+  corrplot::corrplot(method = 'color', 
+                     order = 'hclust', 
+                     type = 'upper', 
+                     diag = FALSE, 
+                     tl.col = 'black',
+                     addCoef.col = "grey30",
+                     number.cex = 0.6,
+                     col = colorRampPalette(colors = c(
+                       kp_cols('red'), 
+                       'white', 
+                       kp_cols('dark_blue')))(200),
+                     main = 'Audio Feature Correlation',
+                     mar = c(2,2,2,2),
+                     family = 'Avenir')
+
+ggsave("audio_feature_corrplot.png", path = "~/Desktop/Github/spotify/plots")
+topFourArtistsplot
+png(file="audio_feature_corrplot.png")
+png(file="~/Desktop/Github/spotify/plots/audio_feature_corrplot.png", type = "cairo")
+saveas(gcf,"audio_feature_corrplot.png")
+dev.off()
+```
+
+```{r}
+
+png(height=1800, width=1800, file="Plots/distances.png", type = "cairo")
+
+topFourArtistsplot <- topFourArtists %>%
+  select(tempo, energy, valence, danceability, key, loudness, instrumentalness) %>%
+  scale() %>%
+  cor() %>%
+  corrplot::corrplot(method = 'color', 
+                     order = 'hclust', 
+                     type = 'upper', 
+                     diag = FALSE, 
+                     tl.col = 'black',
+                     addCoef.col = "grey30",
+                     number.cex = 0.6,
+                     col = colorRampPalette(colors = c(
+                       kp_cols('red'), 
+                       'white', 
+                       kp_cols('dark_blue')))(200),
+                     main = 'Audio Feature Correlation',
+                     mar = c(2,2,2,2),
+                     family = 'Avenir')
+recordPlot()
+```
+
+
+```{r}
+kp_cols <- function(...) {
+  
+  kp_colors <- c(purple = "#490B32",
+                 red = "#9A031E",
+                 orange = "#FB8B24",
+                 dark_orange = "#E36414",
+                 dark_blue = "#0F4C5C",
+                 grey = "#66717E",
+                 light_green = "#B3CBB9",
+                 blue = "#5DA9E9"
+  )
+  
+  cols <- c(...)
+  
+  if (is.null(cols))
+    return (kp_colors)
+  
+  kp_colors[cols]
+}
+```
+
+```{r}
+library("Hmisc")
+
+
+topFourArtists_cor <- topFourArtists %>%
+  select(tempo, energy, valence, danceability, key, loudness, instrumentalness) %>%
+  as.matrix() %>%
+  rcorr(type = "spearman")
+
+allArtist_corr <- allArtist %>%
+  select(tempo, energy, valence, danceability, key, loudness, instrumentalness) %>%
+  as.matrix() %>%
+  rcorr(type = "spearman")
+```
+
+
+```{r}
+myfun <- function(ff){
+  corrplot(ff$r, 
+           p.mat = round(as.matrix(ff$p),3),
+           method = 'circle',
+           type = 'lower',
+           sig.level = c(.001, .01, .05), 
+           tl.pos="lt", 
+           tl.col="black", tl.cex=1.3, 
+           tl.offset=0.2,
+           cl.pos="r",
+           insig = "label_sig",
+           pch.cex = 1.3,
+           pch.col="red",
+           cl.cex = 1.3)
+  corrplot(ff$r,  type="upper", method="number",
+           col="coral4",  tl.pos="n", cl.pos="n", number.cex = 1.2, add=T,diag=F)
+  recordPlot() # record the latest plot
+}
+```
+
