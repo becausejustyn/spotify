@@ -164,7 +164,7 @@ rquery.cormat(mydata, type="flatten", graph=FALSE)
 ```
 
 ```{r}
-recordPlot()
+
 
 favArtist %>%
   select(tempo, energy, valence, danceability, key, loudness, instrumentalness) %>%
@@ -182,15 +182,31 @@ favArtist %>%
                        'white', 
                        kp_cols('dark_blue')))(200),
                      main = 'Audio Feature Correlation',
-                     mar = c(2,2,2,2),
+                     mar = c(2,4,5,4),
                      family = 'Avenir')
 
-ggsave("audio_feature_corrplot.png", path = "~/Desktop/Github/spotify/plots")
-topFourArtistsplot
-png(file="audio_feature_corrplot.png")
-png(file="~/Desktop/Github/spotify/plots/audio_feature_corrplot.png")
-saveas(gcf,"audio_feature_corrplot.png")
-dev.off()
+
+favArtist %>%
+  select(tempo, energy, valence, danceability, key, loudness, instrumentalness) %>%
+  scale() %>%
+  cor() %>%
+  corrplot::corrplot(method = 'color', 
+                     order = 'hclust', 
+                     type = 'upper', 
+                     diag = FALSE, 
+                     tl.col = 'black',
+                     addCoef.col = "grey30",
+                     number.cex = 0.6,
+                     col = colorRampPalette(colors = c(
+                       kp_cols('red'), 
+                       'white', 
+                       kp_cols('dark_blue')))(200),
+                     mar = c(2,4,10,4),
+                     family = 'Avenir')
+
+title("Audio Feature Correlation", line = -0.0125, family="Avenir") #plot window isn't representative of the actual plot. This was used to adjust the spacing too
+
+
 ```
 
 ```{r}
@@ -278,3 +294,77 @@ myfun <- function(ff){
 }
 ```
 
+Corrplot Alternative #this is with ggplot
+```{r}
+library(GGally)
+
+ggcorr
+
+favArtist %>%
+  select(tempo, energy, valence, danceability, key, loudness, instrumentalness) %>%
+  scale() %>%
+  cor() %>%
+  ggcorr()
+
+```
+
+All correlations
+```{r}
+library(lares)
+
+allArtist %>%
+  select(tempo, energy, valence, danceability, loudness, instrumentalness) %>%
+  scale() %>%
+  corr_cross(max_pvalue = 0.05, top = 10)
+
+#Negative correlations are represented in red and positive correlations in blue.
+
+favArtist %>%
+  select(tempo, energy, valence, danceability, loudness, instrumentalness) %>%
+  scale() %>%
+  corr_cross(max_pvalue = 0.05, top = 10)
+
+allArtist %>%
+  select(tempo, energy, valence, danceability, loudness, instrumentalness) %>%
+  scale() %>%
+  corr_cross(max_pvalue = 0.05, top = 10)
+  
+
+allArtist_filt2 %>%
+  dplyr::group_by(artist_name) %>%
+  select(energy, valence, danceability, loudness, instrumentalness) %>%
+  corr_cross(max_pvalue = 0.05, top = 20)
+  
+allArtist_filt2 %>%
+  dplyr::group_by(artist_name) %>%
+  select(energy, valence, danceability, loudness, instrumentalness) %>%
+  corr_cross(
+
+allArtist_filt2 %>%
+  dplyr::group_by(artist_name) %>%
+  select(danceability, energy, loudness, instrumentalness, valence, duration_ms) %>%
+  corr_cross(grid = TRUE)
+
+allArtist_filt %>%
+  corr_var(valence, top = 10)
+
+allArtist_filt2 %>%
+  dplyr::group_by(artist_name) %>%
+  select(danceability, energy, loudness, instrumentalness, valence, duration_ms) %>%
+  dplyr::filter(artist_name == "Brian Fallon") %>%
+  corr_var()
+  
+allArtist_filt2_group <- allArtist_filt2 %>%
+  group_by(artist_name)
+
+
+allArtist_filt2_group %>%
+  select(danceability, energy, loudness, instrumentalness, valence, duration_ms) %>%
+  dplyr::group_by(artist_name) %>%
+   scale() %>%
+  corr_var(max_pvalue = 0.05, top = 10)
+  
+```
+
+
+allArtist_filt2
