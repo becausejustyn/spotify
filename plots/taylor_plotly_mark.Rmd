@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r}
+```{r include=FALSE}
 library(tidyverse)
 library(ggthemes)
 library(ggridges)
@@ -21,9 +21,13 @@ library(gghighlight)
 library(ggplot2)
 library(plotly)
 
-read_csv("taylor.csv")
+taylor3 <- read_csv("taylor.csv")
 
 
+
+```
+
+```{r}
 ggplot(taylor3, aes(x = valence, y = energy, color = album_name)) +
   geom_jitter() +
   geom_vline(xintercept = 0.5) +

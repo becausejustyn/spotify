@@ -1,0 +1,125 @@
+---
+title: "taylor_plots"
+author: "Justyn Rodrigues"
+date: "21/02/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r include=FALSE}
+library(tidyverse)
+library(ggthemes)
+library(ggridges)
+library(knitr)
+library(kableExtra)
+library(lubridate)
+library(jsonlite)
+library(gghighlight)
+library(ggplot2)
+library(plotly)
+
+taylor3 <- read_csv("~/Desktop/Github/spotify/plots/taylor.csv")
+
+kp_cols <- function(...) {
+  
+  kp_colors <- c(purple = "#490B32",
+                 red = "#9A031E",
+                 orange = "#FB8B24",
+                 dark_orange = "#E36414",
+                 dark_blue = "#0F4C5C",
+                 grey = "#66717E",
+                 light_green = "#B3CBB9",
+                 blue = "#5DA9E9"
+  )
+  
+  cols <- c(...)
+  
+  if (is.null(cols))
+    return (kp_colors)
+  
+  kp_colors[cols]
+}
+```
+
+## Energy By Album
+
+
+```{r}
+t_plot3 <- taylor3 %>%
+  ggplot(aes(x = valence, y = fct_rev(album_name), fill = album_name)) +
+               geom_density_ridges(scale = 2, size = 0.1, rel_min_height = 0.03,quantile_lines=TRUE,quantiles=2) +
+               theme_ridges() +
+               scale_x_continuous(expand = c(0, 0)) +
+               labs(title= "Taylor Swift valence by album", subtitle = "Based on data from Spotify", y="Album", x = "Valence")
+
+t_plot3 + theme_wsj() + scale_fill_brewer(palette = "Pastel1")
+
+t_plot3 + theme_solarized() + scale_fill_brewer(palette = "Pastel1")
+
+t_plot3 + scale_color_fivethirtyeight() + theme_fivethirtyeight()
+
+t_plot3 + theme_solarized() + scale_colour_solarized()
+```
+
+## Valence By Album
+
+```{r}
+t_plot4 <- taylor3 %>%
+  ggplot(aes(x = danceability, y = fct_rev(album_name), fill = album_name)) +
+               geom_density_ridges(scale = 2, size = 0.1, rel_min_height = 0.03,quantile_lines=TRUE,quantiles=2) +
+               theme_ridges() +
+               scale_x_continuous(expand = c(0, 0)) +
+               labs(title= "Taylor Swift danceability by album", subtitle = "Based on data from Spotify", y="Album", x = "Danceability")
+
+t_plot4 + theme_wsj() + scale_fill_brewer(palette = "Pastel1")
+
+t_plot4 + theme_solarized() + scale_fill_brewer(palette = "Pastel1")
+
+t_plot4 + scale_color_fivethirtyeight() + theme_fivethirtyeight()
+
+t_plot4 + theme_solarized() + scale_colour_solarized()
+```
+
+## Correlogram
+```{r}
+taylor3 %>%
+  dplyr::select(tempo, energy, valence, danceability, duration_ms, loudness, instrumentalness, -track_name, -album_name) %>%
+  scale() %>%
+  cor() %>%
+  corrplot::corrplot(method = 'color', 
+                     order = 'hclust', 
+                     type = 'upper', 
+                     diag = FALSE, 
+                     tl.col = 'black',
+                     addCoef.col = "grey30",
+                     number.cex = 0.6,
+                     col = colorRampPalette(colors = c(
+                       kp_cols('red'), 
+                       'white', 
+                       kp_cols('dark_blue')))(200),
+                     main = 'Audio Feature Correlation',
+                     mar = c(2,4,5,4),
+                     family = 'Avenir')
+```
+
+## Emotional Quadrant
+```{r}
+ggplot(taylor3, aes(x = valence, y = energy, color = album_name)) +
+  geom_jitter() +
+  geom_vline(xintercept = 0.5) +
+  geom_hline(yintercept = 0.5) +
+  scale_x_continuous(expand = c(0, 0), limits = c(0, 1)) +
+  scale_y_continuous(expand = c(0, 0), limits = c(0, 1)) +
+  annotate('text', 0.25 / 2, 0.95, label = "Angry / Turbulent") +
+  annotate('text', 1.75 / 2, 0.95, label = "Joyful / Happy") +
+  annotate('text', 1.75 / 2, 0.05, label = "Peace / Chill") +
+  annotate('text', 0.25 / 2, 0.05, label = "Depressing / Sad") +
+  labs(x= "Valence", y= "Energy") +
+  ggtitle("Emotional quadrant Taylor Swift", "Based on energy by valence") 
+ggplotly()
+```
+
