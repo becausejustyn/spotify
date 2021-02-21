@@ -24,7 +24,37 @@ library(formattable)
 ```
 
 
+```{r}
+taylor_disco$ar
 
+data_taylor <- dplyr::filter(data, grepl('Taylor Swift', artists))
+
+data_taylor <- data_taylor %>%
+  dplyr::group_by(name) %>%
+  dplyr::distinct(name, .keep_all = TRUE) 
+
+data_taylor <- data_taylor %>%
+  dplyr::filter(!grepl(remove.list, name)) 
+
+
+taylor_vector <- taylor3$track_name
+
+data_taylor <- data_taylor %>%
+  dplyr::filter(name %in% taylor_vector)
+  
+  
+pop_vec 
+  
+  
+df %>% 
+    group_by(ID, Item) %>%
+    mutate(Condition = Condition[Condition != "Trash"])  
+  
+taylor3 %>%
+  dplyr::mutate()
+```
+taylor1 <- taylor %>%
+dplyr::filter(album_name %in% taylor_albums1)
 
 Proportion of playlist genres
 ```{r}

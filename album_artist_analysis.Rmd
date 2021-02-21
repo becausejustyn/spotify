@@ -27,7 +27,7 @@ Sys.setenv(SPOTIFY_CLIENT_ID = "052dec7a99bd42e888548b0f32f5d444")
 Sys.setenv(SPOTIFY_CLIENT_SECRET = "3e61d71877f2486fa2a17c703eb452a6")
 access_token <- get_spotify_access_token(client_id = Sys.getenv('SPOTIFY_CLIENT_ID'), client_secret = Sys.getenv('SPOTIFY_CLIENT_SECRET'))
 ```
-
+taylor3 <- read_csv("~/Desktop/Github/spotify/plots/taylor.csv")
 
 DF of an Artist
 ```{r}
@@ -221,7 +221,7 @@ taylor1 %>%
 ```
 Energy table
 ```{r}
-table1 <- taylor1 %>% 
+table1 <- taylor3 %>% 
   group_by(album_name) %>% 
   summarise(avg = mean(energy),max = max(energy),min = min(energy)) %>% 
   arrange(-avg) %>% 
@@ -229,16 +229,9 @@ table1 <- taylor1 %>%
   kable_styling("striped", full_width = F, position = "left")%>% 
   row_spec(row = 1, color = "black",bold = TRUE) 
 
-reactable(table1_df, bordered = TRUE, highlight = TRUE)
+reactable(taylor3, bordered = TRUE, highlight = TRUE)
 
-
-
-taylor_df1 <- taylor1
-
-taylor_df1 <- taylor_df1 %>%
-  select(track_name, album_name, energy)
-
-reactable(taylor_df1, groupBy = "album_name", columns = list(
+reactable(taylor3, groupBy = "album_name", columns = list(
   energy = colDef(aggregate = "max"),
   energy = colDef(aggregate = "min"),
   energy = colDef(aggregate = "mean", format = colFormat(digits = 1))))
@@ -274,10 +267,58 @@ reactable(taylor3, groupBy = "album_name", columns = list(
 ))  
 
 orange_pal <- function(x) rgb(colorRamp(c("#ffe4cc", "#ffb54d"))(x), maxColorValue = 255)
+blue_pal <- function(x) rgb(colorRamp(c("#ccdeff", "#4dafff"))(x), maxColorValue = 255)
+pink_pal <- function(x) rgb(colorRamp(c("#eda8e1", "#f26bdb"))(x), maxColorValue = 255)
+GnYlRd <- function(x) rgb(colorRamp(c("#63be7b", "#ffeb84", "#f87274"))(x), maxColorValue = 255)
 
+taylor3 <- taylor3 %>%
+  relocate(album_release_year, .after = duration_ms) %>%
+  relocate(valence, .before = danceability)
+  
+taylor3 <- taylor3 %>%
+  dplyr::select(-key, -loudness, -instrumentalness)
+
+
+reactable(
+  taylor3, resizable = TRUE,
+  filterable = TRUE,
+  searchable = TRUE,
+  highlight = TRUE,
+  columns = list(
+    danceability = colDef(
+      style = function(value) {
+        normalized <- (value - min(taylor3$danceability)) / (max(taylor3$danceability) - min(taylor3$danceability))
+        color <- GnYlRd(normalized)
+        list(background = color)
+      }),
+    valence = colDef(
+      style = function(value) {
+        normalized <- (value - min(taylor3$valence)) / (max(taylor3$valence) - min(taylor3$valence))
+        color <- GnYlRd(normalized)
+        list(background = color)
+      }),
+    energy = colDef(
+      style = function(value) {
+        normalized <- (value - min(taylor3$energy)) / (max(taylor3$energy) - min(taylor3$energy))
+        color <- GnYlRd(normalized)
+        list(background = color)
+      }
+    ),
+    album_release_year = colDef(minWidth = 160)
+  )
+)
+
+
+
+```
+
+```{r}
 reactable(
   taylor3,
   columns = list(
+    valence = colDef(
+    
+    
     energy = colDef(
       style = function(value) {
         normalized <- (value - min(taylor3$energy)) / (max(taylor3$energy) - min(taylor3$energy))
@@ -288,6 +329,24 @@ reactable(
   )
 )
 ```
+
+reactable(
+  temps,
+  defaultColDef = colDef(
+    style = function(value) {
+      if (!is.numeric(value)) return()
+      normalized <- (value - min(nottem)) / (max(nottem) - min(nottem))
+      color <- GnYlRd(normalized)
+      list(background = color)
+    },
+    format = colFormat(digits = 1),
+    minWidth = 50
+  ),
+  columns = list(
+    .rownames = colDef(name = "Year", sortable = TRUE, align = "left")
+  ),
+  bordered = TRUE
+)
 
 ```{r}
 reactable(data, columns = list(
@@ -302,6 +361,26 @@ reactable(data, columns = list(
 data$Species = colDef(name = "Species"))
 )
 ```
+
+```{r}
+reactable(taylor3, columns = list(
+  Change = colDef(
+    cell = function(value) {
+      if (value >= 0) paste0("+", value) else value
+    },
+    style = function(value) {
+      color <- if (value > 0) {
+        "#008000"
+      } else if (value < 0) {
+        "#e00000"
+      }
+      list(fontWeight = 600, color = color)
+    }
+  )
+))
+```
+
+
 
 reactable(taylor_df, groupBy = "Album")
 
