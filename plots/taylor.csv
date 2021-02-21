@@ -1,0 +1,128 @@
+artist_name,track_name,album_name,album_release_year,danceability,energy,key,loudness,instrumentalness,valence,tempo,duration_ms
+Taylor Swift,willow,Evermore,2020,0.392,0.574,7,-9.195,0.00179,0.529,81.112,214706
+Taylor Swift,champagne problems,Evermore,2020,0.462,0.24,0,-12.077,0,0.32,171.319,244000
+Taylor Swift,gold rush,Evermore,2020,0.512,0.462,9,-10.491,0.166,0.353,112.05,185320
+Taylor Swift,‘tis the damn season,Evermore,2020,0.575,0.434,5,-8.193,6.59e-5,0.348,145.916,229840
+Taylor Swift,tolerate it,Evermore,2020,0.316,0.361,9,-10.381,2.67e-5,0.221,74.952,245440
+Taylor Swift,"no body, no crime (feat. HAIM)",Evermore,2020,0.546,0.613,7,-7.589,0,0.535,79.015,215626
+Taylor Swift,happiness,Evermore,2020,0.559,0.334,11,-10.733,0,0.211,122.079,315146
+Taylor Swift,dorothea,Evermore,2020,0.605,0.488,4,-8.322,0,0.354,119.966,225880
+Taylor Swift,coney island (feat. The National),Evermore,2020,0.537,0.537,8,-11.266,9.04e-4,0.292,107.895,275320
+Taylor Swift,ivy,Evermore,2020,0.515,0.545,2,-9.277,1.97e-5,0.535,88.856,260440
+Taylor Swift,cowboy like me,Evermore,2020,0.604,0.517,0,-9.014,1.55e-4,0.511,127.967,275040
+Taylor Swift,long story short,Evermore,2020,0.546,0.73,0,-7.704,0.179,0.573,157.895,215920
+Taylor Swift,marjorie,Evermore,2020,0.535,0.561,5,-11.609,1.36e-4,0.287,96.103,257773
+Taylor Swift,closure,Evermore,2020,0.689,0.704,9,-10.813,4.83e-6,0.92,151.884,180653
+Taylor Swift,evermore (feat. Bon Iver),Evermore,2020,0.39,0.27,1,-10.673,0.00227,0.32,125.177,304106
+Taylor Swift,I Forgot That You Existed,Lover,2019,0.664,0.316,5,-10.345,2.03e-6,0.541,92.875,170640
+Taylor Swift,Cruel Summer,Lover,2019,0.552,0.702,9,-5.707,2.06e-5,0.564,169.994,178426
+Taylor Swift,Lover,Lover,2019,0.359,0.543,7,-7.582,1.58e-5,0.453,68.534,221306
+Taylor Swift,The Man,Lover,2019,0.777,0.658,0,-5.191,0,0.633,110.048,190360
+Taylor Swift,The Archer,Lover,2019,0.292,0.574,0,-9.375,0.00569,0.166,124.344,211240
+Taylor Swift,I Think He Knows,Lover,2019,0.897,0.366,0,-8.029,3.53e-4,0.416,100.003,173386
+Taylor Swift,Miss Americana & The Heartbreak Prince,Lover,2019,0.662,0.747,11,-6.926,0.00615,0.487,150.088,234146
+Taylor Swift,Paper Rings,Lover,2019,0.811,0.719,9,-6.553,1.36e-5,0.865,103.979,222400
+Taylor Swift,Cornelia Street,Lover,2019,0.824,0.624,0,-9.728,1.89e-4,0.248,102.012,287266
+Taylor Swift,Death By A Thousand Cuts,Lover,2019,0.712,0.732,4,-6.754,0,0.313,94.071,198533
+Taylor Swift,London Boy,Lover,2019,0.695,0.71,1,-6.639,1.04e-4,0.557,157.925,190240
+Taylor Swift,Soon You’ll Get Better (feat. The Chicks),Lover,2019,0.433,0.182,0,-12.566,0,0.421,207.476,201586
+Taylor Swift,False God,Lover,2019,0.739,0.32,11,-10.862,1.47e-4,0.351,79.97,200306
+Taylor Swift,You Need To Calm Down,Lover,2019,0.771,0.671,2,-5.617,0,0.714,85.026,171360
+Taylor Swift,Afterglow,Lover,2019,0.756,0.449,9,-8.746,0,0.399,111.011,223293
+Taylor Swift,ME! (feat. Brendon Urie of Panic! At The Disco),Lover,2019,0.61,0.83,0,-4.105,0,0.728,182.162,193000
+Taylor Swift,It’s Nice To Have A Friend,Lover,2019,0.737,0.175,10,-9.912,3.37e-4,0.545,70.008,150440
+Taylor Swift,Daylight,Lover,2019,0.557,0.496,0,-9.602,1.73e-4,0.265,149.983,293453
+Taylor Swift,...Ready For It?,Reputation,2017,0.613,0.764,2,-6.509,0,0.417,160.015,208186
+Taylor Swift,End Game,Reputation,2017,0.649,0.589,2,-6.237,0,0.151,159.073,244826
+Taylor Swift,I Did Something Bad,Reputation,2017,0.696,0.602,0,-6.156,2.11e-5,0.305,82.989,238253
+Taylor Swift,Don’t Blame Me,Reputation,2017,0.615,0.534,9,-6.719,1.76e-5,0.193,135.917,236413
+Taylor Swift,Delicate,Reputation,2017,0.75,0.404,9,-10.178,3.57e-4,0.0499,95.045,232253
+Taylor Swift,Look What You Made Me Do,Reputation,2017,0.766,0.709,9,-6.471,1.41e-5,0.506,128.07,211853
+Taylor Swift,So It Goes...,Reputation,2017,0.574,0.61,2,-7.283,1.1e-6,0.374,74.957,227906
+Taylor Swift,Gorgeous,Reputation,2017,0.8,0.535,7,-6.684,9.48e-6,0.451,92.027,209680
+Taylor Swift,Getaway Car,Reputation,2017,0.562,0.689,2,-6.745,2.23e-6,0.351,172.054,233626
+Taylor Swift,King Of My Heart,Reputation,2017,0.675,0.703,0,-7.902,2.21e-6,0.314,110.01,214320
+Taylor Swift,Dancing With Our Hands Tied,Reputation,2017,0.624,0.691,0,-6.686,1.1e-5,0.284,160.024,211506
+Taylor Swift,Dress,Reputation,2017,0.719,0.469,0,-8.792,0,0.0851,120.085,230373
+Taylor Swift,This Is Why We Can't Have Nice Things,Reputation,2017,0.567,0.789,5,-5.986,0,0.438,163.96,207133
+Taylor Swift,Call It What You Want,Reputation,2017,0.598,0.504,9,-9.874,2.21e-4,0.252,163.954,203506
+Taylor Swift,New Year’s Day,Reputation,2017,0.661,0.151,0,-12.864,0,0.23,94.922,235466
+Taylor Swift,Welcome To New York,1989,2014,0.793,0.634,7,-4.807,1.76e-6,0.615,117.023,212600
+Taylor Swift,Blank Space,1989,2014,0.752,0.678,5,-5.421,1.64e-6,0.583,96.009,231826
+Taylor Swift,Style,1989,2014,0.598,0.786,2,-5.572,0.00143,0.456,95.021,231000
+Taylor Swift,Out Of The Woods,1989,2014,0.552,0.841,7,-6.938,1.23e-5,0.342,91.993,235800
+Taylor Swift,All You Had To Do Was Stay,1989,2014,0.602,0.735,5,-5.778,4.77e-5,0.472,96.969,193293
+Taylor Swift,Shake It Off,1989,2014,0.648,0.785,7,-5.414,0,0.943,160.02,219200
+Taylor Swift,I Wish You Would,1989,2014,0.649,0.898,0,-5.963,9.9e-5,0.503,118.027,207440
+Taylor Swift,Bad Blood,1989,2014,0.652,0.802,7,-6.114,6.45e-6,0.295,170.157,211933
+Taylor Swift,Wildest Dreams,1989,2014,0.553,0.664,8,-7.417,0.0056,0.467,140.06,220440
+Taylor Swift,How You Get The Girl,1989,2014,0.764,0.659,5,-6.136,0.00458,0.525,119.982,247533
+Taylor Swift,This Love,1989,2014,0.485,0.459,4,-8.768,0,0.0858,71.981,250093
+Taylor Swift,I Know Places,1989,2014,0.595,0.763,0,-4.991,0,0.507,159.959,195706
+Taylor Swift,Clean,1989,2014,0.81,0.38,4,-7.755,0,0.211,103.981,271000
+Taylor Swift,State Of Grace,Red,2012,0.588,0.825,4,-5.882,0.00138,0.397,129.968,295186
+Taylor Swift,Red,Red,2012,0.602,0.896,1,-4.267,8.87e-5,0.641,124.978,220826
+Taylor Swift,Treacherous,Red,2012,0.705,0.621,2,-8.086,4.3e-6,0.395,109.993,240773
+Taylor Swift,I Knew You Were Trouble.,Red,2012,0.622,0.469,3,-6.798,2.25e-6,0.679,77.019,217973
+Taylor Swift,All Too Well,Red,2012,0.602,0.609,0,-7.803,2e-4,0.337,93.06,327893
+Taylor Swift,22,Red,2012,0.658,0.729,7,-6.561,0.0013,0.668,104.007,230133
+Taylor Swift,I Almost Do,Red,2012,0.567,0.481,4,-7.357,4.13e-5,0.233,145.865,242573
+Taylor Swift,We Are Never Ever Getting Back Together,Red,2012,0.628,0.676,7,-5.911,2.65e-5,0.75,85.984,191880
+Taylor Swift,Stay Stay Stay,Red,2012,0.729,0.748,0,-6.67,1.29e-6,0.928,99.981,204826
+Taylor Swift,The Last Time,Red,2012,0.505,0.443,2,-7.039,3.15e-6,0.123,94.069,298293
+Taylor Swift,Holy Ground,Red,2012,0.627,0.816,4,-6.698,0.00208,0.648,157.043,201853
+Taylor Swift,Sad Beautiful Tragic,Red,2012,0.624,0.34,7,-12.411,0.0337,0.261,129.987,283680
+Taylor Swift,The Lucky One,Red,2012,0.706,0.499,4,-7.675,0,0.545,117.937,240133
+Taylor Swift,Everything Has Changed,Red,2012,0.624,0.458,6,-6.755,3.89e-6,0.436,80.017,243933
+Taylor Swift,Starlight,Red,2012,0.649,0.777,9,-5.804,3.35e-4,0.587,126.018,217826
+Taylor Swift,Begin Again,Red,2012,0.53,0.526,7,-8.349,3.52e-6,0.323,79.025,237613
+Taylor Swift,Mine,Speak Now,2010,0.624,0.757,7,-2.94,1.87e-6,0.658,121.07,230706
+Taylor Swift,Sparks Fly,Speak Now,2010,0.605,0.787,5,-3.002,1.42e-6,0.374,114.987,260933
+Taylor Swift,Back To December,Speak Now,2010,0.529,0.67,2,-4.663,0,0.286,141.893,293026
+Taylor Swift,Speak Now,Speak Now,2010,0.709,0.599,7,-3.734,0,0.735,118.975,240760
+Taylor Swift,Dear John,Speak Now,2010,0.589,0.47,4,-5.32,1.45e-6,0.102,119.386,403920
+Taylor Swift,Mean,Speak Now,2010,0.568,0.761,4,-3.987,0,0.789,163.974,237733
+Taylor Swift,The Story Of Us,Speak Now,2010,0.543,0.818,4,-3.611,3.68e-4,0.683,139.898,265666
+Taylor Swift,Never Grow Up,Speak Now,2010,0.714,0.305,2,-8.837,0,0.554,124.91,290466
+Taylor Swift,Enchanted,Speak Now,2010,0.455,0.623,8,-3.878,4.24e-4,0.208,163.893,352186
+Taylor Swift,Better Than Revenge,Speak Now,2010,0.516,0.917,11,-3.186,6.37e-6,0.635,145.821,217160
+Taylor Swift,Innocent,Speak Now,2010,0.552,0.608,1,-5.29,0,0.17,134.05,302253
+Taylor Swift,Haunted,Speak Now,2010,0.436,0.95,5,-2.627,1.08e-6,0.352,162.088,242080
+Taylor Swift,Last Kiss,Speak Now,2010,0.371,0.341,10,-9.475,3.09e-5,0.196,89.038,367133
+Taylor Swift,Long Live,Speak Now,2010,0.418,0.68,7,-4.3,7.59e-5,0.142,204.125,317946
+Taylor Swift,Mine - POP Mix,Speak Now,2010,0.696,0.768,7,-3.863,1.21e-6,0.692,121.05,230546
+Taylor Swift,Fearless,Fearless,2008,0.598,0.705,5,-4.394,0,0.433,100.019,242826
+Taylor Swift,Fifteen,Fearless,2008,0.56,0.636,7,-4.453,0,0.209,95.431,294880
+Taylor Swift,Love Story,Fearless,2008,0.622,0.637,2,-5.401,1.44e-4,0.291,119.054,234213
+Taylor Swift,Hey Stephen,Fearless,2008,0.843,0.555,6,-7.359,1.34e-6,0.815,116.001,254826
+Taylor Swift,White Horse,Fearless,2008,0.578,0.349,0,-8.025,0,0.247,92.354,234906
+Taylor Swift,You Belong With Me,Fearless,2008,0.688,0.765,6,-4.451,1.78e-5,0.431,129.967,231453
+Taylor Swift,Breathe,Fearless,2008,0.491,0.479,1,-7.396,0,0.16,148.305,264373
+Taylor Swift,Tell Me Why,Fearless,2008,0.606,0.85,7,-3.057,2.96e-6,0.512,99.978,200906
+Taylor Swift,You're Not Sorry,Fearless,2008,0.467,0.456,6,-4.155,0,0.252,134.059,262173
+Taylor Swift,The Way I Loved You,Fearless,2008,0.433,0.723,5,-3.751,0,0.406,160.92,244573
+Taylor Swift,Forever & Always,Fearless,2008,0.607,0.826,10,-4.989,0,0.501,128.048,225786
+Taylor Swift,The Best Day,Fearless,2008,0.667,0.447,1,-8.572,4.65e-6,0.36,126.189,245666
+Taylor Swift,Change,Fearless,2008,0.536,0.768,5,-4.157,0,0.237,95.996,280333
+Taylor Swift,Our Song,Fearless,2008,0.504,0.7,2,-4.826,1.24e-6,0.63,177.822,200200
+Taylor Swift,Teardrops On My Guitar,Fearless,2008,0.513,0.547,10,-6.289,0.00637,0.154,99.942,194720
+Taylor Swift,Should've Said No,Fearless,2008,0.4,0.762,4,-4.411,9.59e-5,0.437,168.137,244333
+Taylor Swift,Beautiful Eyes,Fearless,2008,0.529,0.7,3,-3.303,0,0.372,96.019,179240
+Taylor Swift,Picture To Burn - Radio Edit,Fearless,2008,0.661,0.859,7,-2.445,0,0.802,105.583,173333
+Taylor Swift,I'm Only Me When I'm With You,Fearless,2008,0.557,0.935,8,-3.694,6.11e-4,0.543,143.997,214320
+Taylor Swift,I Heart ?,Fearless,2008,0.706,0.818,7,-3.335,0,0.64,105.995,197346
+Taylor Swift,Love Story - J Stax Radio Mix,Fearless,2008,0.696,0.827,9,-6.464,0.0031,0.324,127.997,221800
+Taylor Swift,Tim McGraw,Taylor Swift,2006,0.58,0.491,0,-6.462,0,0.425,76.009,232106
+Taylor Swift,Picture To Burn,Taylor Swift,2006,0.658,0.877,7,-2.098,0,0.821,105.586,173066
+Taylor Swift,Teardrops On My Guitar - Radio Single Remix,Taylor Swift,2006,0.621,0.417,10,-6.941,0,0.289,99.953,203040
+Taylor Swift,A Place in this World,Taylor Swift,2006,0.576,0.777,9,-2.881,0,0.428,115.028,199200
+Taylor Swift,Cold As You,Taylor Swift,2006,0.418,0.482,5,-5.769,0,0.261,175.558,239013
+Taylor Swift,The Outside,Taylor Swift,2006,0.589,0.805,5,-4.055,0,0.591,112.982,207106
+Taylor Swift,Tied Together with a Smile,Taylor Swift,2006,0.479,0.578,2,-4.963,0,0.192,146.165,248106
+Taylor Swift,Stay Beautiful,Taylor Swift,2006,0.594,0.629,8,-4.919,0,0.504,131.597,236053
+Taylor Swift,Should've Said No,Taylor Swift,2006,0.476,0.777,4,-3.771,0,0.472,167.964,242200
+Taylor Swift,Mary's Song (Oh My My My),Taylor Swift,2006,0.403,0.627,2,-5.28,0,0.374,74.9,213080
+Taylor Swift,Our Song,Taylor Swift,2006,0.668,0.672,2,-4.931,0,0.539,89.011,201106
+Taylor Swift,I'm Only Me When I'm With You,Taylor Swift,2006,0.563,0.934,8,-3.629,8.07e-4,0.518,143.964,213053
+Taylor Swift,Invisible,Taylor Swift,2006,0.612,0.394,7,-5.723,0,0.233,96.001,203226
+Taylor Swift,A Perfectly Good Heart,Taylor Swift,2006,0.483,0.751,4,-5.726,0,0.268,156.092,220146

@@ -53,7 +53,40 @@ MAKE A SINGLE DATA FRAME
 favArtist <- rbind(Brian, MM, TGA)
 allArtist <- rbind(Brian, MM, TGA, TWY, direstraits, maiden, bruce, smashingpum, animalsasleaders, silverjews, dreamtheater, buckethead)
                    
+allArtist_t1 <- allArtist %>%
+  bind_rows(Brian, MM, TGA, TWY, direstraits, maiden, bruce, smashingpum, animalsasleaders, silverjews, dreamtheater, buckethead)
 
+
+a1 <- allArtist_t1 %>%
+dplyr::distinct(track_name, .keep_all = TRUE)
+
+a1 <- a1 %>%
+  select(artist_name, tempo, energy, valence, danceability, key, loudness, instrumentalness, duration_ms) #might get rid of track name
+
+a1 %>%
+dplyr::filter(artist_name == "Brian Fallon")
+
+a1 %>%
+  dplyr::group_by(artist_name) %>%
+  scale() %>%
+  corr_cross(max_pvalue = 0.05, top = 10)
+
+
+a1 %>%
+  select(tempo, energy, valence, danceability, loudness, instrumentalness, duration_ms) %>%
+  scale() %>%
+  corr_cross(max_pvalue = 0.05, top = 20)
+
+#Negative correlations are represented in red and positive correlations in blue.
+
+a1 %>%
+  select(-artist_name) %>%
+  corr_var(valence, top = 10)
+
+
+MM %>%
+  select(tempo, energy, valence, danceability, loudness, instrumentalness, duration_ms) %>%
+  corr_var(valence, top = 10)
 ```
 
 
@@ -118,7 +151,7 @@ ggplotly()
 
 
 ```{r}
-emotionalQuadrant <- ggplot(data = buckethead, aes(x = valence, y = energy, color = artist_name)) +
+emotionalQuadrant_taylor <- ggplot(taylor3, aes(x = valence, y = energy, color = album_name)) +
   geom_jitter() +
   geom_vline(xintercept = 0.5) +
   geom_hline(yintercept = 0.5) +
@@ -129,7 +162,10 @@ emotionalQuadrant <- ggplot(data = buckethead, aes(x = valence, y = energy, colo
   annotate('text', 1.75 / 2, 0.05, label = "Peace / Chill") +
   annotate('text', 0.25 / 2, 0.05, label = "Depressing / Sad") +
   labs(x= "Valence", y= "Energy") +
-  ggtitle("Emotional quadrant Top four artists", "Based on energy y valence")  
+  ggtitle("Emotional quadrant Taylor Swift", "Based on energy by valence")  
+
+ggsave("emotionalQuadrant_taylor.png", path = "~/Desktop/Github/spotify/plots/taylor_swift")
+
 ```
 
 
@@ -186,8 +222,8 @@ favArtist %>%
                      family = 'Avenir')
 
 
-favArtist %>%
-  select(tempo, energy, valence, danceability, key, loudness, instrumentalness) %>%
+taylor3 %>%
+
   scale() %>%
   cor() %>%
   corrplot::corrplot(method = 'color', 
@@ -210,6 +246,8 @@ title("Audio Feature Correlation", line = -0.0125, family="Avenir") #plot window
 ```
 
 ```{r}
+head(taylor1)
+head(taylor3)
 
 png(height=1800, width=1800, file="Plots/distances.png", type = "cairo")
 
@@ -266,8 +304,9 @@ topFourArtists_cor <- topFourArtists %>%
   as.matrix() %>%
   rcorr(type = "spearman")
 
-allArtist_corr <- allArtist %>%
-  select(tempo, energy, valence, danceability, key, loudness, instrumentalness) %>%
+taylor3 %>%
+  dplyr::ungroup(album_name) %>%
+  dplyr::select(tempo, energy, valence, danceability, key, loudness, instrumentalness) %>%
   as.matrix() %>%
   rcorr(type = "spearman")
 ```
@@ -300,8 +339,9 @@ library(GGally)
 
 ggcorr
 
-favArtist %>%
-  select(tempo, energy, valence, danceability, key, loudness, instrumentalness) %>%
+taylor3 %>%
+  dplyr::ungroup(album_name) %>%
+  dplyr::select(tempo, energy, valence, danceability, key, loudness, instrumentalness) %>%
   scale() %>%
   cor() %>%
   ggcorr()
@@ -312,12 +352,17 @@ All correlations
 ```{r}
 library(lares)
 
-allArtist %>%
-  select(tempo, energy, valence, danceability, loudness, instrumentalness) %>%
+taylor3 %>%
+  dplyr::ungroup(album_name) %>%
+  dplyr::select(tempo, energy, valence, danceability, key, loudness, instrumentalness) %>%
   scale() %>%
   corr_cross(max_pvalue = 0.05, top = 10)
 
 #Negative correlations are represented in red and positive correlations in blue.
+
+taylor3 %>%
+  corr_var(valence, top = 10)
+
 
 favArtist %>%
   select(tempo, energy, valence, danceability, loudness, instrumentalness) %>%
@@ -368,3 +413,13 @@ allArtist_filt2_group %>%
 
 
 allArtist_filt2
+
+In wide format, categorical data is always grouped
+```{r}
+
+allArtist_filt 
+
+pivot_wider(allArtist_filt)
+```
+
+c("danceability", "energy", "key", "loudness", "instrumentalness", "valence", "duration_ms")

@@ -32,6 +32,32 @@ access_token <- get_spotify_access_token(client_id = Sys.getenv('SPOTIFY_CLIENT_
 DF of an Artist
 ```{r}
 MM <- get_artist_audio_features('Modest Mouse')
+taylor <- get_artist_audio_features('Taylor Swift')
+```
+
+
+```{r}
+#Create string you want to filter
+taylor_albums1 <- c("Taylor Swift", "Fearless", "Speak Now", "Red", "1989", "reputation", "Lover", "Folklore", "evermore")
+
+#subset of the albums you want
+taylor1 <- taylor %>%
+dplyr::filter(album_name %in% taylor_albums1)
+
+#checking if it worked
+taylor1 %>%
+  dplyr::distinct(album_name)
+
+#Create as factor
+taylor1$album_name <- as.factor(taylor1$album_name)
+taylor1$album_release_year <- as.factor(taylor1$album_release_year)
+
+#order the factor
+taylor1$album_name <- factor(taylor1$album_name, levels = unique(taylor1$album_name[order(taylor1$album_release_year)])) 
+taylor1$album_release_year <- factor(taylor1$album_release_year, levels = unique(taylor1$album_release_year[order(taylor1$album_release_year)]))
+
+#rename factors, might need to reorder the factors after this
+taylor1$album_name <- recode_factor(taylor1$album_name, evermore = "Evermore", reputation = "Reputation")
 ```
 
 
@@ -39,8 +65,41 @@ Create Factors for categorical data
 ```{r}
 MM$album_name <- as.factor(MM$album_name)
 MM$album_release_year <- as.factor(MM$album_release_year)
+
 ```
 
+Energy By Album
+```{r}
+t_plot1 <- taylor1 %>%
+  ggplot(aes(x = energy, y = fct_rev(album_name))) +
+               geom_density_ridges(scale = 2, size = 0.1, rel_min_height = 0.03,quantile_lines=TRUE,quantiles=2) +
+               theme_ridges() +
+               scale_x_continuous(expand = c(0, 0)) +
+               labs(title= "Taylor Swift energy by album", subtitle = "Based on data from Spotify", y="Album", x = "Energy")
+             
+
+t_plot2 <- taylor1 %>%
+  ggplot(aes(x = energy, y = fct_rev(album_name), fill = album_name)) +
+               geom_density_ridges(scale = 2, size = 0.1, rel_min_height = 0.03,quantile_lines=TRUE,quantiles=2) +
+               theme_ridges() +
+               scale_x_continuous(expand = c(0, 0)) +
+               labs(title= "Taylor Swift energy by album", subtitle = "Based on data from Spotify", y="Album", x = "Energy")
+```
+
+Energy plots
+```{r}
+t_plot2 + theme_wsj() + scale_fill_brewer(palette = "Pastel1")
+ggsave("pastel1_wsj_energy_by_album.png", path = "~/Desktop/Github/spotify/plots/taylor_swift")
+
+t_plot2 + theme_solarized() + scale_fill_brewer(palette = "Pastel1")
+ggsave("pastel1_solarized_energy_by_album.png", path = "~/Desktop/Github/spotify/plots/taylor_swift")
+
+t_plot2 + scale_color_fivethirtyeight() + theme_fivethirtyeight()
+ggsave("fivethirtyeight_energy_by_album.png", path = "~/Desktop/Github/spotify/plots/taylor_swift")
+
+t_plot2 + theme_solarized() + scale_colour_solarized()
+ggsave("solarized_energy_by_album.png", path = "~/Desktop/Github/spotify/plots/taylor_swift")
+```
 
 
 Energy By Album
@@ -54,6 +113,76 @@ ggplot(MM, aes(x = energy,y=fct_rev(album_release_year))) +
 ```
 
 
+Valence plots
+```{r}
+t_plot3 <- taylor3 %>%
+  ggplot(aes(x = valence, y = fct_rev(album_name), fill = album_name)) +
+               geom_density_ridges(scale = 2, size = 0.1, rel_min_height = 0.03,quantile_lines=TRUE,quantiles=2) +
+               theme_ridges() +
+               scale_x_continuous(expand = c(0, 0)) +
+               labs(title= "Taylor Swift valence by album", subtitle = "Based on data from Spotify", y="Album", x = "Valence")
+
+
+t_plot3 + theme_wsj() + scale_fill_brewer(palette = "Pastel1")
+ggsave("pastel1_wsj_valence_by_album.png", path = "~/Desktop/Github/spotify/plots/taylor_swift")
+
+t_plot3 + theme_solarized() + scale_fill_brewer(palette = "Pastel1")
+ggsave("pastel1_solarized_valence_by_album.png", path = "~/Desktop/Github/spotify/plots/taylor_swift")
+
+t_plot3 + scale_color_fivethirtyeight() + theme_fivethirtyeight()
+ggsave("fivethirtyeight_valence_by_album.png", path = "~/Desktop/Github/spotify/plots/taylor_swift")
+
+t_plot3 + theme_solarized() + scale_colour_solarized()
+ggsave("solarized_valence_by_album.png", path = "~/Desktop/Github/spotify/plots/taylor_swift")
+```
+
+Dance plots
+```{r}
+t_plot4 <- taylor3 %>%
+  ggplot(aes(x = danceability, y = fct_rev(album_name), fill = album_name)) +
+               geom_density_ridges(scale = 2, size = 0.1, rel_min_height = 0.03,quantile_lines=TRUE,quantiles=2) +
+               theme_ridges() +
+               scale_x_continuous(expand = c(0, 0)) +
+               labs(title= "Taylor Swift danceability by album", subtitle = "Based on data from Spotify", y="Album", x = "Danceability")
+
+t_plot4 + theme_wsj() + scale_fill_brewer(palette = "Pastel1")
+ggsave("pastel1_wsj_valence_by_album.png", path = "~/Desktop/Github/spotify/plots/taylor_swift")
+
+t_plot4 + theme_solarized() + scale_fill_brewer(palette = "Pastel1")
+ggsave("pastel1_solarized_valence_by_album.png", path = "~/Desktop/Github/spotify/plots/taylor_swift")
+
+t_plot4 + scale_color_fivethirtyeight() + theme_fivethirtyeight()
+ggsave("fivethirtyeight_valence_by_album.png", path = "~/Desktop/Github/spotify/plots/taylor_swift")
+
+t_plot4 + theme_solarized() + scale_colour_solarized()
+ggsave("solarized_valence_by_album.png", path = "~/Desktop/Github/spotify/plots/taylor_swift")
+```
+Corr
+```{r}
+taylor3 %>%
+  dplyr::select(tempo, energy, valence, danceability, duration_ms, loudness, instrumentalness, -track_name, -album_name) %>%
+  scale() %>%
+  cor() %>%
+  corrplot::corrplot(method = 'color', 
+                     order = 'hclust', 
+                     type = 'upper', 
+                     diag = FALSE, 
+                     tl.col = 'black',
+                     addCoef.col = "grey30",
+                     number.cex = 0.6,
+                     col = colorRampPalette(colors = c(
+                       kp_cols('red'), 
+                       'white', 
+                       kp_cols('dark_blue')))(200),
+                     main = 'Audio Feature Correlation',
+                     mar = c(2,4,5,4),
+                     family = 'Avenir')
+```
+"danceability", "energy", "key", "loudness", "instrumentalness", "valence", "tempo", "duration_ms"
+
+danceability, energy, key, loudness, instrumentalness, valence, tempo, duration_ms
+
+
 A table representation of the same data:
 ```{r}
 MM %>% 
@@ -64,21 +193,117 @@ MM %>%
   row_spec(row = 1, color = "black",bold = TRUE)
 ```
 
-
-
-Songs with the most Energy.  
-Easily enough, we can also show a table with the 10 songs with the most energy
+A table representation of the same data: Taylor
 ```{r}
-MM %>% 
-  arrange(-energy) %>% 
-  select(track_name, album_name, energy) %>% 
-  head(10) %>% 
-  kable() %>% 
-  kable_styling("striped", full_width = F, position = "left") %>% 
-  row_spec(row = c(1), color = "black",bold = TRUE)
+taylor1 %>% 
+  group_by(album_name) %>% 
+  summarise(avg = mean(energy),max = max(energy),min = min(energy)) %>% 
+  arrange(-avg) %>% 
+  kable(caption = "Taylor Swift energy by album") %>% 
+  kable_styling("striped", full_width = F, position = "left")%>% 
+  row_spec(row = 1, color = "black",bold = TRUE) 
+
+taylor1 %>% 
+  group_by(album_name) %>% 
+  summarise(avg = mean(valence),max = max(valence),min = min(valence)) %>% 
+  arrange(-avg) %>% 
+  kable(caption = "Taylor Swift valence by album") %>% 
+  kable_styling("striped", full_width = F, position = "left")%>% 
+  row_spec(row = 1, color = "black",bold = TRUE) 
+
+taylor1 %>% 
+  group_by(album_name) %>% 
+  summarise(avg = mean(danceability),max = max(danceability),min = min(danceability)) %>% 
+  arrange(-avg) %>% 
+  kable(caption = "Taylor Swift danceability by album") %>% 
+  kable_styling("striped", full_width = F, position = "left")%>% 
+  row_spec(row = 1, color = "black",bold = TRUE) 
+```
+Energy table
+```{r}
+table1 <- taylor1 %>% 
+  group_by(album_name) %>% 
+  summarise(avg = mean(energy),max = max(energy),min = min(energy)) %>% 
+  arrange(-avg) %>% 
+  kable(caption = "Taylor Swift energy by album") %>% 
+  kable_styling("striped", full_width = F, position = "left")%>% 
+  row_spec(row = 1, color = "black",bold = TRUE) 
+
+reactable(table1_df, bordered = TRUE, highlight = TRUE)
+
+
+
+taylor_df1 <- taylor1
+
+taylor_df1 <- taylor_df1 %>%
+  select(track_name, album_name, energy)
+
+reactable(taylor_df1, groupBy = "album_name", columns = list(
+  energy = colDef(aggregate = "max"),
+  energy = colDef(aggregate = "min"),
+  energy = colDef(aggregate = "mean", format = colFormat(digits = 1))))
+          
+          
+reactable(taylor3, groupBy = "album_name", columns = list(
+  energy = colDef(aggregate = "mean", format = colFormat(digits = 2))))
+
+reactable(taylor3, columns = list(
+  energy = colDef(name = "Energy"),
+  valence = colDef(name = "Valence"),
+  danceability = colDef(name =  "Danceability")
+))
+
+
+  reactable(taylor3, groupBy = "album_name",
+  defaultColDef = colDef(
+    header = function(value) gsub(".", " ", value, fixed = TRUE),
+    cell = function(value) format(value, nsmall = 1),
+    align = "center",
+    minWidth = 70,
+    headerStyle = list(background = "#f7f7f8")),
+  columns = list(
+    track_name = colDef(minWidth = 140),
+    album_name = colDef(minWidth = 140)),
+  bordered = TRUE, highlight = TRUE)
+  
+  
+reactable(taylor3, groupBy = "album_name", columns = list(
+  energy = colDef(aggregate = "mean", format = colFormat(digits = 2)),
+  valence = colDef(aggregate = "mean", format = colFormat(digits = 2)),
+  danceability = colDef(aggregate = "mean", format = colFormat(digits = 2))
+))  
+
+orange_pal <- function(x) rgb(colorRamp(c("#ffe4cc", "#ffb54d"))(x), maxColorValue = 255)
+
+reactable(
+  taylor3,
+  columns = list(
+    energy = colDef(
+      style = function(value) {
+        normalized <- (value - min(taylor3$energy)) / (max(taylor3$energy) - min(taylor3$energy))
+        color <- orange_pal(normalized)
+        list(background = color)
+      }
+    )
+  )
+)
 ```
 
+```{r}
+reactable(data, columns = list(
+  
+  
+  Petal.Length = colDef(style = function(value) {
+    normalized <- (value - min(data$Petal.Length)) / (max(data$Petal.Length) - min(data$Petal.Length))
+    color <- orange_pal(normalized)
+    list(background = color)
+  })
+,
+data$Species = colDef(name = "Species"))
+)
+```
 
+reactable(taylor_df, groupBy = "Album")
 
 Analysis of a specific album
 ```{r}
@@ -95,5 +320,20 @@ MM %>%
 ```
 
 
+```{r}
+taylor3 <- taylor1 %>%
+  dplyr::group_by(album_name) %>%
+  dplyr::distinct(track_name, .keep_all = TRUE)
+  
+#Patterns to be removed from the data
+remove.list <- paste(c("Demo Recording", "Karaoke Version", "Pop Version", "Acoustic Version"), collapse = '|')
+
+#Applying the changes
+taylor3 <- taylor3 %>%
+  filter(!grepl(remove.list, track_name)) 
+
+taylor3 <- taylor3 %>%
+  dplyr::select(artist_name, track_name, album_name, album_release_year, danceability, energy, key, loudness, instrumentalness, valence, tempo, duration_ms)
+```
 
 

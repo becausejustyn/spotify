@@ -8,6 +8,9 @@ Project Notes
 This will be where you can write/add your notes to help keep yourself more organised
 
 Artist quad is done as well as the corrplot, now you might want to compare correlations of other features between artists?
+What is the best way to store the data from the different artists?
+
+Compare artist ranks on these measures.
 
 Offline_stream_history is where you have the data of your spotify stream history. You did some cleaning to make the DF more useful.  
 
