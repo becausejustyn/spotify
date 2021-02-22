@@ -1,0 +1,686 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r results = 'hide', echo=FALSE}
+library(tidyverse)
+library(cowplot)
+library(corrplot)
+library(highcharter)
+library(ggplot2)
+library(GGally)  
+library(scales)
+```
+
+```{r}
+reactable(taylor3, groupBy = "album_name", columns = list(
+  energy = colDef(aggregate = "mean", format = colFormat(digits = 2)),
+  valence = colDef(aggregate = "mean", format = colFormat(digits = 2)),
+  tempo = colDef(aggregate = "mean", format = colFormat(digits = 2)),
+  duration_ms = colDef(aggregate = "mean", format = colFormat(digits = 2)),
+  danceability = colDef(aggregate = "mean", format = colFormat(digits = 2)),
+))  
+```
+
+
+
+```{r}
+df <- df[2:15]
+colnames(df)
+df %>% glimpse()
+df %>% summary()
+sum(is.na(df))
+```
+
+## Overview {.tabset .tabset-fade .tabset-pills}
+
+### Popularity
+```{r, fig.width=10, fig.height=4}
+hchart(taylor_df$popularity, type = "column")
+```     
+
+### Valence
+```{r}
+hchart(taylor_df$valence, type = "column")
+```   
+
+### Duration 
+```{r}
+hchart(taylor_df$duration_ms, type = "column")
+```
+
+### Danceability                      
+```{r}
+hchart(taylor_df$danceability, type = "column")
+```
+
+### Energy                      
+```{r}
+hchart(taylor_df$energy, type = "column")
+```                      
+          
+### Acousticness                      
+```{r}
+hchart(taylor_df$acousticness, type = "column")
+```    
+
+### Loudness                      
+```{r}
+hchart(taylor_df$loudness, type = "column")
+```   
+
+### Beats Per Min
+```{r}
+hchart(taylor_df$tempo, type = "column")
+```
+
+### Instrumentalness
+```{r}
+hchart(taylor_df$instrumentalness, type = "column")
+```
+
+
+```{r}
+hpolar <- function(x, a, c, z) { 
+highchart() %>% 
+  hc_chart(polar = TRUE) %>% 
+  hc_title(text = x) %>% 
+  hc_xAxis(categories = a,
+           tickmarkPlacement = "on",
+           lineWidth = 0) %>% 
+  hc_yAxis(gridLineInterpolation = "polygon",
+           lineWidth = 0,
+           min = 0) %>% 
+  hc_series(
+    list(
+      name = z,
+      data = c,
+      pointPlacement = "on",
+      type = "column",
+      color = '#646a70'  
+    )
+  )    
+}   
+``` 
+
+
+## Top 20 songs for each feature {.tabset .tabset-fade .tabset-pills}
+
+### Popularity
+```{r, fig.width=10, fig.height=4}
+# Popularity - Top 10 songs
+
+taylor_df %>%
+  dplyr::arrange(-popularity) %>%
+  hpolar('Popularity - Top 20 songs', taylor_df$name, taylor_df$popularity,  'popularity')
+
+hpolar('Popularity - Top 20 songs', popular_df$title, popular_df$pop,  'popularity')
+
+popular_df[,-4]
+
+taylor_df$popularity
+
+taylor_df_pop20 <- taylor_df %>%
+  dplyr::arrange(-popularity) %>%
+  dplyr::slice(1:20) %>%
+  dplyr::arrange(year)
+
+taylor_df_pop$popularity
+
+
+hpolar('Popularity - Top 20 songs', taylor_df_pop$name, taylor_df_pop$popularity,  'popularity')
+```     
+#Top 20 songs for each feature
+```{r}
+hpolar('Popularity - Top 20 songs', taylor_df$name, taylor_df$popularity,  'popularity')
+```
+
+
+### Valence
+```{r}
+# Valence - Top 10 songs
+Valence_df <- df %>%
+  select(title, val, artist, pop) %>%
+  group_by(artist, title, pop, val)%>%
+  summarise(n = n())%>%
+  arrange(desc(val))%>%
+  head(20) 
+    
+hpolar('Valence - Top 20 songs', Valence_df$title, Valence_df$val, 'Valence')
+
+Valence_df[,-5]
+```   
+
+
+
+### Duration 
+```{r, fig.width=10, fig.height=5}
+# Duration - Top 20 songs
+
+Duration_df <- df %>%
+  select(title, dur, pop)%>%
+  mutate(duration_min=round(dur/60, digits=2)) %>%
+  group_by(title, duration_min, pop, dur)%>%
+  summarise(n = n())%>%
+  arrange(desc(dur))%>%
+  head(20)  
+
+    
+hpolar('Duration - Top 20 songs', Duration_df$title, Duration_df$duration_min,  'duration')
+Duration_df[-5]
+```
+
+### Danceability                      
+```{r}
+# Danceability - Top 20 songs
+Danceability_df <- df %>%
+  select(title, dnce, artist, pop) %>%
+  group_by(artist, title,pop, dnce)%>%
+  summarise(n = n())%>%
+  arrange(desc(dnce))%>%
+  head(20) 
+    
+hpolar('Danceability - Top 20 songs', Danceability_df$title, Danceability_df$dnce,  'Danceability')
+Danceability_df[,-5]
+
+```
+
+### Energy                      
+```{r}
+# Energy - Top 20 songs
+Energy_df <- df %>%
+  select(title, nrgy, artist, pop) %>%
+  group_by(artist, title, pop, nrgy)%>%
+  summarise(n = n())%>%
+  arrange(desc(nrgy))%>%
+  head(20) 
+    
+hpolar('Energy - Top 20 songs', Energy_df$title, Energy_df$nrgy,  'Energy')
+Energy_df[-5]
+
+```                      
+          
+### Acousticness                      
+```{r}
+# Acousticness - Top 20 songs
+Acousticness_df <- df %>%
+  select(title, acous, artist, pop) %>%
+  group_by(artist, title, acous, pop)%>%
+  summarise(n = n())%>%
+  arrange(desc(acous))%>%
+  head(20) 
+    
+hpolar('Acousticness - Top 20 songs', Acousticness_df$title, Acousticness_df$acous,  'Acousticness')
+Acousticness_df[, -4]
+```    
+
+
+### Loudness                      
+```{r}
+# Loudness - Top 20 songs 
+Loudness_df <- df %>%
+  select(title, dB, artist) %>%
+  group_by(artist, title, dB)%>%
+  summarise(n = n())%>%
+  arrange(desc(dB))%>%
+  head(20) 
+
+hpolar('Loudness - Top 20 songs', Loudness_df$title, Loudness_df$dB,  'Loudness')
+Loudness_df[, -4]
+
+```   
+
+
+### Speechiness                      
+```{r}
+# Speechiness - Top 20 songs
+Speechiness_df <- df %>%
+  select(title, spch, artist, pop) %>%
+  group_by(artist, title, pop,spch)%>%
+  summarise(n = n())%>%
+  arrange(desc(spch))%>%
+  head(20) 
+    
+hpolar('Speechiness - Top 20 songs', Speechiness_df$title, Speechiness_df$spch,  'Speechiness')
+Speechiness_df[,-5]
+```  
+
+
+### Liveness
+```{r}
+# Liveness - Top 20 songs
+Liveness_df <- df %>%
+  select(title, live, artist, pop) %>%
+  group_by(artist, title, pop,live)%>%
+  summarise(n = n())%>%
+  arrange(desc(live))%>%
+  head(20) 
+    
+hpolar('Liveness_df - Top 20 songs', Liveness_df$title, Liveness_df$live,  'Liveness')
+Liveness_df[,-5]
+  
+```   
+
+
+### Beats Per Min
+```{r}
+# Top 20 instrimental Songs
+Beats_df <- df %>%
+  select(title, bpm, artist, pop) %>%
+  group_by(artist, title, pop,bpm)%>%
+  summarise(n = n())%>%
+  arrange(desc(bpm))%>%
+  head(20) 
+    
+hpolar('Beats per min - Top 20 songs', Beats_df$title, Beats_df$bpm,  'Beats per min')
+Beats_df[, -5]
+
+```
+
+
+## Data Distributions {.tabset .tabset-fade .tabset-pills}
+
+
+### Popularity
+```{r,fig.width=7, fig.height=5}
+summary(df$pop)
+
+cat('Left Skewed Distribution -> ')
+Popularity <- ggplot(data=df, aes(x=pop))+
+  geom_histogram(aes(y=..density..), bins = 40, fill="#7dafff")+
+  stat_function(fun=dnorm, color="black",
+                args=list(mean=mean(df$pop), 
+                          sd=sd(df$pop))) + theme_minimal() + 
+theme(plot.title=element_text(hjust=0.5)) + labs(title="Normal Distribution", 
+                                                x=" Popularity", y="Probability")
+Popularity
+
+cat(' left skewed distribution meaning that most observations have a high concentration of popularity')
+
+qqnorm(df$pop, pch = 1, frame = FALSE)
+qqline(df$pop, col = "#00ff84", lwd = 2)   
+
+
+
+
+```     
+
+
+
+### Valence
+```{r, fig.width=7, fig.height=5}
+summary(df$val)
+
+cat('Normal Distribution -> ')
+Valence <- ggplot(data=df, aes(x=val))+
+  geom_histogram(aes(y=..density..), bins = 40, fill="#7dafff")+
+  stat_function(fun=dnorm, color="black",
+                args=list(mean=mean(df$val), 
+                          sd=sd(df$val))) + theme_minimal() + 
+theme(plot.title=element_text(hjust=0.5)) + labs(title="Normal Distribution", 
+                                                x=" Valence", y="Probability")
+Valence
+
+cat('some of musicians preffer less valence , other preffer high valence type music. its normally distributed')
+
+qqnorm(df$val, pch = 1, frame = FALSE)
+qqline(df$val, col = "#00ff84", lwd = 2)    
+
+```   
+
+
+
+### Duration 
+```{r, fig.width=7, fig.height=5}
+summary(df$dur)
+cat('slightly Right Skewed Distribution -> ')
+Duration <- ggplot(data=df, aes(x=dur))+
+  geom_histogram(aes(y=..density..), bins = 40, fill="#7dafff")+
+  stat_function(fun=dnorm, color="black",
+                args=list(mean=mean(df$dur), 
+                          sd=sd(df$dur))) + theme_minimal() + 
+theme(plot.title=element_text(hjust=0.5)) + labs(title="slightly Right Skewed Distribution", 
+                                                x=" Duration", y="Probability")
+Duration
+
+cat('most musicians preffer less song lengths, meaning most observations are in the left side.')
+
+qqnorm(df$dur, pch = 1, frame = FALSE)
+qqline(df$dur, col = "#00ff84", lwd = 2)
+```
+
+
+### Danceability                      
+```{r, fig.width=7, fig.height=5}
+
+summary(df$dnce)
+cat('Left Skewed Distribution -> ')
+Danceability <- ggplot(data=df, aes(x=dnce))+
+  geom_histogram(aes(y=..density..), bins = 40, fill="#7dafff")+
+  stat_function(fun=dnorm, color="black",
+                args=list(mean=mean(df$dnce), 
+                          sd=sd(df$dnce))) + theme_minimal() + 
+theme(plot.title=element_text(hjust=0.5)) + labs(title="left Skewed Distribution", 
+                                                x=" Dencebility", y="Probability")
+Danceability
+
+cat('most musicians have a high concentration of Dencebility, meaning most observations are in the right side.')
+qqnorm(df$dnce, pch = 1, frame = FALSE)
+qqline(df$dnce, col = "#00ff84", lwd = 2)
+```
+
+### Energy                      
+```{r, fig.width=7, fig.height=5}
+summary(df$nrgy)
+
+cat('Left Skewed Distribution -> ')
+Energy <- ggplot(data=df, aes(x=nrgy))+
+  geom_histogram(aes(y=..density..), bins = 40, fill="#7dafff")+
+  stat_function(fun=dnorm, color="black",
+                args=list(mean=mean(df$nrgy), 
+                          sd=sd(df$nrgy))) + theme_minimal() + 
+theme(plot.title=element_text(hjust=0.5)) + labs(title=" left Skewed Distribution", 
+                                                x=" Energy", y="Probability")
+Energy
+
+cat('most musicians have a high concentration of Energy, meaning most observations are in the right side.')
+
+qqnorm(df$nrgy, pch = 1, frame = FALSE)
+qqline(df$nrgy, col = "#00ff84", lwd = 2)
+
+```                      
+          
+### Acousticness    
+```{r, fig.width=7, fig.height=5}
+summary(df$acous)
+
+cat('Right Skewed Distribution -> ')
+Acousticness <- ggplot(data=df, aes(x=acous))+
+  geom_histogram(aes(y=..density..), bins = 40, fill="#7dafff")+
+  stat_function(fun=dnorm, color="black",
+                args=list(mean=mean(df$acous), 
+                          sd=sd(df$acous))) + theme_minimal() + 
+theme(plot.title=element_text(hjust=0.5)) + labs(title="Right Skewed Distribution", 
+                                                x=" Acousticness", y="Probability")
+Acousticness
+cat('most musicians preffer to use less Acousticness, meaning most observations are in the left side.')
+
+qqnorm(df$acous, pch = 1, frame = FALSE)
+qqline(df$acous, col = "#00ff84", lwd = 2)
+
+```    
+
+
+### Loudness                      
+```{r, fig.width=7, fig.height=5}
+summary(df$dB)
+
+cat('Left Skewed Distribution -> ')
+Loudness <- ggplot(data=df, aes(x=dB))+
+  geom_histogram(aes(y=..density..), bins = 40, fill="#7dafff")+
+  stat_function(fun=dnorm, color="black",
+                args=list(mean=mean(df$dB), 
+                          sd=sd(df$dB))) + theme_minimal() + 
+theme(plot.title=element_text(hjust=0.5)) + labs(title="Left Skewed Distribution", 
+                                                x=" Loudness", y="Probability")
+Loudness
+cat('most musicians preffer to use High DB, meaning most observations are in the right side.')
+
+qqnorm(df$dB, pch = 1, frame = FALSE)
+qqline(df$dB, col = "#00ff84", lwd = 2)
+```   
+
+
+### Speechiness                      
+```{r, fig.width=7, fig.height=5}
+summary(df$spch)
+cat('Right Skewed Distribution -> ')
+Speechiness <- ggplot(data=df, aes(x=spch))+
+  geom_histogram(aes(y=..density..), bins = 40, fill="#7dafff")+
+  stat_function(fun=dnorm, color="black",
+                args=list(mean=mean(df$spch), 
+                          sd=sd(df$spch))) + theme_minimal() + 
+theme(plot.title=element_text(hjust=0.5)) + labs(title="Right Skewed Distribution", 
+                                                x=" Speechiness", y="Probability")
+Speechiness
+cat('most musicians preffer to speek less, meaning most observations are in the left side.')
+
+
+qqnorm(df$spch, pch = 1, frame = FALSE)
+qqline(df$spch, col = "#00ff84", lwd = 2)
+
+```  
+
+
+### Liveness
+```{r, fig.width=7, fig.height=5}
+
+summary(df$live)
+
+cat('Right Skewed Distribution -> ')
+Liveness <- ggplot(data=df, aes(x=live))+
+  geom_histogram(aes(y=..density..), bins = 40, fill="#7dafff")+
+  stat_function(fun=dnorm, color="black",
+                args=list(mean=mean(df$live), 
+                          sd=sd(df$live))) + theme_minimal() + 
+theme(plot.title=element_text(hjust=0.5)) + labs(title="Right Skewed Distribution", 
+                                                x=" Liveness", y="Probability")
+Liveness
+cat('most musicians preffer less liveness, meaning most observations are in the left side.')
+
+
+qqnorm(df$live, pch = 1, frame = FALSE)
+qqline(df$live, col = "#00ff84", lwd = 2)
+    
+```   
+
+
+### Beats Per Min
+```{r, fig.width=7, fig.height=5}
+
+summary(df$bpm)
+
+cat('slightly Left Skewed Distribution -> ')
+Beats <- ggplot(data=df, aes(x=bpm))+
+  geom_histogram(aes(y=..density..), bins = 40, fill="#7dafff")+
+  stat_function(fun=dnorm, color="black",
+                args=list(mean=mean(df$bpm), 
+                          sd=sd(df$bpm))) + theme_minimal() + 
+theme(plot.title=element_text(hjust=0.5)) + labs(title="slightly left Skewed Distribution", 
+                                                x=" Beats per min", y="Probability")
+Beats
+
+cat('most musicians preffer High DB, meaning most observations are in the right side.')
+
+qqnorm(df$bpm, pch = 1, frame = FALSE)
+qqline(df$bpm, col = "#19b6ff", lwd = 2)
+
+```
+#
+
+```{r}
+
+boxplot(df$pop)$out
+dim(df)
+cat('Removing Outliers')
+outliers <- boxplot(df$pop, plot=FALSE)$out
+#df[which(df$pop %in% outliers),]
+df <- df[-which(df$pop %in% outliers),]
+dim(df)
+boxplot(df$pop)
+
+```
+
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+
+Remove square brackets and quotes from artist name string
+```{r}
+data3$artists <- data3$artists %>%
+  str_replace_all("\\[|\\]", "") %>%
+  str_replace_all("\\'|\\'", "") %>%
+   str_replace('["]', '')
+```
+
+```{r}
+head(data3)
+
+data3 <- data3 %>%
+  dplyr::relocate(artists, .before = acousticness) %>%
+  dplyr::relocate(name, .after = artists) %>%
+  dplyr::relocate(acousticness, .after = loudness)
+
+taylor_df <- data3 %>%
+  dplyr::filter(artists == "Taylor Swift") %>%
+  dplyr::distinct(name, .keep_all = TRUE) %>%
+  dplyr::arrange(name)
+
+View(taylor_df)
+
+
+
+removal_list <- paste(c("Demo Recording", "Bonus", "Pop Version", "Acoustic Version"), collapse = '|')
+
+taylor_df <- taylor_df %>%
+  filter(!grepl(removal_list, name)) 
+
+names(taylor_df)
+
+```
+
+```{r}
+sum(is.na(data)) #check for missing data
+
+library(tidyverse)
+library(cowplot)
+library(corrplot)
+library(highcharter)
+library(ggplot2)
+library(GGally)  
+library(scales)
+```
+
+
+```{r}
+hchart(taylor_df$popularity, type = "column")
+hchart(taylor_df$valence, type = "column")
+hchart(taylor_df$duration_ms, type = "column")
+hchart(taylor_df$danceability, type = "column")
+hchart(taylor_df$energy, type = "column")
+hchart(taylor_df$acousticness, type = "column")
+hchart(taylor_df$loudness, type = "column")
+hchart(taylor_df$speechiness, type = "column")
+hchart(taylor_df$liveness, type = "column")    
+hchart(taylor_df$tempo, type = "column")
+hchart(df$instrumentalness, type = "column")
+
+```
+
+```{r}
+#for a bar plot do I just want the frequency? maybe I want it so I can show the individual songs
+
+ggplot(taylor_df, aes(x=name, y=popularity)) + 
+  geom_bar(stat = "identity")
+
+ggplot(taylor_df[tail(order(taylor_df$popularity), 10), ], ) + 
+     aes(name, popularity) + geom_bar(stat = "identity") 
+```
+
+
+```{r}
+hpolar <- function(x, a, c, z) { 
+    
+highchart() %>% 
+  hc_chart(polar = TRUE) %>% 
+  hc_title(text = x) %>% 
+  hc_xAxis(categories = a,
+           tickmarkPlacement = "on",
+           lineWidth = 0) %>% 
+  hc_yAxis(gridLineInterpolation = "polygon",
+           lineWidth = 0,
+           min = 0) %>% 
+  hc_series(
+    list(
+      name = z,
+      data = c,
+      pointPlacement = "on",
+      type = "column",
+      color = '#646a70'  
+    
+    )
+  )    
+
+}  
+```
+
+```{r}
+taylor3
+
+
+
+reactable(taylor3)
+
+  
+ 
+taylor_table <- reactable(taylor3[-1], groupBy = "album_name", showSortable = TRUE, filterable = TRUE,
+          defaultColDef = colDef(
+              header = function(value) gsub(".", " ", value, fixed = TRUE),
+              cell = function(value) format(value, nsmall = 1),
+              align = "center",
+              headerStyle = list(background = "#f7f7f8")
+          ),
+          columns = list(
+              track_name = colDef(name = "Track Name"),
+              album_name = colDef(name = "Album Name"),
+              valence = colDef(name = "Valence", aggregate = "mean", format = colFormat(suffix = "", digits = 2)),
+              danceability = colDef(name = "Danceability", aggregate = "mean", format = colFormat(suffix = "", digits = 2)),
+              energy = colDef(name = "Energy", aggregate = "mean", format = colFormat(suffix = "", digits = 2)),
+              tempo = colDef(name = "Tempo", aggregate = "mean", format = colFormat(suffix = "", digits = 1)),
+              duration_ms = colDef(name = "Length (ms)", aggregate = "mean", format = colFormat(suffix = "", digits = 1)),
+              album_release_year = colDef(name = "Album Year", aggregate = "mean", format = colFormat(suffix = "", digits = 0))
+          ),highlight = TRUE, bordered = TRUE)
+
+
+options(width = 250)
+reactable(
+  taylor3[-1], resizable = TRUE,
+  filterable = TRUE,
+  searchable = TRUE,
+  highlight = TRUE,
+  columns = list(
+    danceability = colDef(
+      style = function(value) {
+        normalized <- (value - min(taylor3$danceability)) / (max(taylor3$danceability) - min(taylor3$danceability))
+        color <- GnYlRd(normalized)
+        list(background = color)
+      }),
+    valence = colDef(
+      style = function(value) {
+        normalized <- (value - min(taylor3$valence)) / (max(taylor3$valence) - min(taylor3$valence))
+        color <- GnYlRd(normalized)
+        list(background = color)
+      }),
+    energy = colDef(
+      style = function(value) {
+        normalized <- (value - min(taylor3$energy)) / (max(taylor3$energy) - min(taylor3$energy))
+        color <- GnYlRd(normalized)
+        list(background = color)
+      }
+    ),
+    album_release_year = colDef(minWidth = 160)
+  )
+)
+
+
+```
+

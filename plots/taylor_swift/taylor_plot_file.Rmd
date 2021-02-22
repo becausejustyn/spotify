@@ -1,16 +1,17 @@
 ---
-title: "taylor_plots"
+title: "Taylor Swift Spotify Analysis"
 author: "Justyn Rodrigues"
 date: "21/02/2021"
-output: html_document
+output: 
+html_document:
+  code_folding: hide
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, echo=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-
-```{r include=FALSE}
+```{r dependencies, message=FALSE, warning=FALSE, include=FALSE}
 library(tidyverse)
 library(ggthemes)
 library(ggridges)
@@ -24,6 +25,11 @@ library(plotly)
 library(reactable)
 
 taylor3 <- read_csv("~/Desktop/Github/spotify/plots/taylor.csv")
+
+taylor3 <- taylor3 %>%
+  dplyr::select(-key, -loudness, -instrumentalness) %>%
+  dplyr::relocate(album_release_year, .after = duration_ms) %>%
+  dplyr::relocate(valence, .before = danceability)
 
 kp_cols <- function(...) {
   
@@ -44,12 +50,15 @@ kp_cols <- function(...) {
   
   kp_colors[cols]
 }
+
+orange_pal <- function(x) rgb(colorRamp(c("#ffe4cc", "#ffb54d"))(x), maxColorValue = 255)
+
+GnYlRd <- function(x) rgb(colorRamp(c("#63be7b", "#ffeb84", "#f87274"))(x), maxColorValue = 255)
 ```
 
+## Energy By Album {.tabset}
 
-## Energy By Album
-
-```{r}
+```{r energy_album, echo=FALSE, collapse=TRUE}
 t_plot3 <- taylor3 %>%
   ggplot(aes(x = energy, y = fct_rev(album_name), fill = album_name)) +
                geom_density_ridges(scale = 2, size = 0.1, rel_min_height = 0.03,quantile_lines=TRUE,quantiles=2) +
@@ -57,55 +66,111 @@ t_plot3 <- taylor3 %>%
                scale_x_continuous(expand = c(0, 0)) +
                labs(title= "Taylor Swift energy by album", subtitle = "Based on data from Spotify", y="Album", x = "Energy")
 
+```
+
+### Energy 1
+
+```{r echo=FALSE}
 t_plot3 + theme_wsj() + scale_fill_brewer(palette = "Pastel1")
+```
 
+### Energy 2
+
+```{r echo=FALSE}
 t_plot3 + theme_solarized() + scale_fill_brewer(palette = "Pastel1")
+```
 
+### Energy 3
+
+```{r echo=FALSE}
 t_plot3 + scale_color_fivethirtyeight() + theme_fivethirtyeight()
+```
 
+### Energy 4
+
+```{r echo=FALSE}
 t_plot3 + theme_solarized() + scale_colour_solarized()
 ```
 
-## Valence By Album
+##  {.unnumbered}
 
-```{r}
+## Valence By Album {.tabset}
+
+```{r valence_album, echo=FALSE, collapse=TRUE}
 t_plot4 <- taylor3 %>%
   ggplot(aes(x = valence, y = fct_rev(album_name), fill = album_name)) +
                geom_density_ridges(scale = 2, size = 0.1, rel_min_height = 0.03,quantile_lines=TRUE,quantiles=2) +
                theme_ridges() +
                scale_x_continuous(expand = c(0, 0)) +
                labs(title= "Taylor Swift valence by album", subtitle = "Based on data from Spotify", y="Album", x = "Valence")
+```
 
+### Valence 1
+
+```{r echo=FALSE}
 t_plot4 + theme_wsj() + scale_fill_brewer(palette = "Pastel1")
+```
 
+### Valence 2
+
+```{r echo=FALSE}
 t_plot4 + theme_solarized() + scale_fill_brewer(palette = "Pastel1")
+```
 
+### Valence 3
+
+```{r echo=FALSE}
 t_plot4 + scale_color_fivethirtyeight() + theme_fivethirtyeight()
+```
 
+### Valence 4
+
+```{r echo=FALSE}
 t_plot4 + theme_solarized() + scale_colour_solarized()
 ```
 
-## Danceability By Album
+##  {.unnumbered}
 
-```{r}
+## Danceability By Album {.tabset}
+
+```{r dance_album, echo=FALSE, collapse=TRUE}
 t_plot5 <- taylor3 %>%
   ggplot(aes(x = danceability, y = fct_rev(album_name), fill = album_name)) +
                geom_density_ridges(scale = 2, size = 0.1, rel_min_height = 0.03,quantile_lines=TRUE,quantiles=2) +
                theme_ridges() +
                scale_x_continuous(expand = c(0, 0)) +
                labs(title= "Taylor Swift danceability by album", subtitle = "Based on data from Spotify", y="Album", x = "Danceability")
+```
 
+### Danceability 1
+
+```{r echo=FALSE}
 t_plot5 + theme_wsj() + scale_fill_brewer(palette = "Pastel1")
+```
 
+### Danceability 2
+
+```{r echo=FALSE}
 t_plot5 + theme_solarized() + scale_fill_brewer(palette = "Pastel1")
+```
 
+### Danceability 3
+
+```{r echo=FALSE}
 t_plot5 + scale_color_fivethirtyeight() + theme_fivethirtyeight()
+```
 
+### Danceability 4
+
+```{r echo=FALSE}
 t_plot5 + theme_solarized() + scale_colour_solarized()
 ```
 
+##  {.unnumbered}
+
 ## Correlogram
-```{r}
+
+```{r corrplot, echo=FALSE, collapse=TRUE}
 taylor3 %>%
   dplyr::select(energy, valence, danceability, duration_ms, tempo, -track_name, -album_name) %>%
   scale() %>%
@@ -127,8 +192,9 @@ taylor3 %>%
 ```
 
 ## Emotional Quadrant
-```{r}
-ggplot(taylor3, aes(x = valence, y = energy, color = album_name)) +
+
+```{r fig.show='hide', include=FALSE}
+quad_plot <- ggplot(taylor3, aes(x = valence, y = energy, color = album_name, text = track_name)) +
   geom_jitter() +
   geom_vline(xintercept = 0.5) +
   geom_hline(yintercept = 0.5) +
@@ -140,55 +206,70 @@ ggplot(taylor3, aes(x = valence, y = energy, color = album_name)) +
   annotate('text', 0.25 / 2, 0.05, label = "Depressing / Sad") +
   labs(x= "Valence", y= "Energy") +
   ggtitle("Emotional quadrant Taylor Swift", "Based on energy by valence") 
-ggplotly()
 ```
 
-Grouping/A table representation of the same data
-```{r}
-reactable(taylor3, groupBy = "album_name", columns = list(
-  energy = colDef(aggregate = "mean", format = colFormat(digits = 2)),
-  valence = colDef(aggregate = "mean", format = colFormat(digits = 2)),
-  tempo = colDef(aggregate = "mean", format = colFormat(digits = 2)),
-  duration_ms = colDef(aggregate = "mean", format = colFormat(digits = 2)),
-  danceability = colDef(aggregate = "mean", format = colFormat(digits = 2))
-))  
+```{r echo=FALSE}
+ggplotly(quad_plot, tooltip = "text")
 ```
 
+## Tables with similar data {.tabset}
 
-Colour filter
-```{r}
-orange_pal <- function(x) rgb(colorRamp(c("#ffe4cc", "#ffb54d"))(x), maxColorValue = 255)
+### Album Aggregate
 
-# Excel-inspired 3-color scale
-GnYlRd <- function(x) rgb(colorRamp(c("#63be7b", "#ffeb84", "#f87274"))(x), maxColorValue = 255)
+```{r album_agg, echo=FALSE}
+reactable(taylor3[-1], groupBy = "album_name", showSortable = TRUE, filterable = TRUE,
+          defaultColDef = colDef(
+              header = function(value) gsub(".", " ", value, fixed = TRUE),
+              cell = function(value) format(value, nsmall = 1),
+              align = "center",
+              headerStyle = list(background = "#f7f7f8")
+          ),
+          columns = list(
+              track_name = colDef(name = "Track Name"),
+              album_name = colDef(name = "Album Name"),
+              valence = colDef(name = "Valence", aggregate = "mean", format = colFormat(suffix = "", digits = 2)),
+              danceability = colDef(name = "Danceability", aggregate = "mean", format = colFormat(suffix = "", digits = 2)),
+              energy = colDef(name = "Energy", aggregate = "mean", format = colFormat(suffix = "", digits = 2)),
+              tempo = colDef(name = "Tempo", aggregate = "mean", format = colFormat(suffix = "", digits = 1)),
+              duration_ms = colDef(name = "Length (ms)", aggregate = "mean", format = colFormat(suffix = "", digits = 1)),
+              album_release_year = colDef(name = "Album Year", aggregate = "mean", format = colFormat(suffix = "", digits = 0))
+          ),highlight = TRUE, bordered = TRUE)
 
-reactable(
-  taylor3, resizable = TRUE,
-  filterable = TRUE,
-  searchable = TRUE,
-  highlight = TRUE,
-  columns = list(
-    danceability = colDef(
-      style = function(value) {
-        normalized <- (value - min(taylor3$danceability)) / (max(taylor3$danceability) - min(taylor3$danceability))
-        color <- GnYlRd(normalized)
-        list(background = color)
-      }),
-    valence = colDef(
-      style = function(value) {
+```
+
+### Colour Table
+
+```{r colour_table, echo=FALSE}
+reactable(taylor3[-1], showSortable = TRUE, filterable = TRUE,
+columns = list(
+              track_name = colDef(name = "Track Name"),
+              album_name = colDef(name = "Album Name"),
+              valence = colDef(name = "Valence", aggregate = "mean", format = colFormat(suffix = "", digits = 2), style = function(value) {
         normalized <- (value - min(taylor3$valence)) / (max(taylor3$valence) - min(taylor3$valence))
         color <- GnYlRd(normalized)
         list(background = color)
       }),
-    energy = colDef(
-      style = function(value) {
+              danceability = colDef(name = "Danceability", aggregate = "mean", format = colFormat(suffix = "", digits = 2), style = function(value) {
+        normalized <- (value - min(taylor3$danceability)) / (max(taylor3$danceability) - min(taylor3$danceability))
+        color <- GnYlRd(normalized)
+        list(background = color)
+      }),
+              energy = colDef(name = "Energy", aggregate = "mean", format = colFormat(suffix = "", digits = 2), style = function(value) {
         normalized <- (value - min(taylor3$energy)) / (max(taylor3$energy) - min(taylor3$energy))
         color <- GnYlRd(normalized)
         list(background = color)
-      }
-    ),
-    album_release_year = colDef(minWidth = 160)
-  )
-)
-```
+      }),
+              tempo = colDef(name = "Tempo", aggregate = "mean", format = colFormat(suffix = "", digits = 1), style = function(value) {
+        normalized <- (value - min(taylor3$tempo)) / (max(taylor3$tempo) - min(taylor3$tempo))
+        color <- GnYlRd(normalized)
+        list(background = color)
+      }),
+              duration_ms = colDef(name = "Length (ms)", aggregate = "mean", format = colFormat(suffix = "", digits = 1), style = function(value) {
+        normalized <- (value - min(taylor3$duration_ms)) / (max(taylor3$duration_ms) - min(taylor3$duration_ms))
+        color <- GnYlRd(normalized)
+        list(background = color)
+      }),
+              album_release_year = colDef(name = "Album Year", aggregate = "mean", format = colFormat(suffix = "", digits = 0))
+          ),highlight = TRUE, bordered = TRUE)  
 
+```
