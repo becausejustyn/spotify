@@ -4,10 +4,12 @@ author: "Justyn Rodrigues"
 date: "21/02/2021"
 output: 
 html_document:
-  code_folding: hide
+    code_folding: show
 ---
 
+
 ```{r setup, include=FALSE, echo=FALSE}
+
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
@@ -58,7 +60,7 @@ GnYlRd <- function(x) rgb(colorRamp(c("#63be7b", "#ffeb84", "#f87274"))(x), maxC
 
 ## Energy By Album {.tabset}
 
-```{r energy_album, echo=FALSE, collapse=TRUE}
+```{r energy_album, echo=TRUE, collapse=TRUE}
 t_plot3 <- taylor3 %>%
   ggplot(aes(x = energy, y = fct_rev(album_name), fill = album_name)) +
                geom_density_ridges(scale = 2, size = 0.1, rel_min_height = 0.03,quantile_lines=TRUE,quantiles=2) +
@@ -216,7 +218,7 @@ ggplotly(quad_plot, tooltip = "text")
 
 ### Album Aggregate
 
-```{r album_agg, echo=FALSE}
+```{r album_agg}
 reactable(taylor3[-1], groupBy = "album_name", showSortable = TRUE, filterable = TRUE,
           defaultColDef = colDef(
               header = function(value) gsub(".", " ", value, fixed = TRUE),
@@ -237,9 +239,10 @@ reactable(taylor3[-1], groupBy = "album_name", showSortable = TRUE, filterable =
 
 ```
 
+
 ### Colour Table
 
-```{r colour_table, echo=FALSE}
+```{r colour_table}
 reactable(taylor3[-1], showSortable = TRUE, filterable = TRUE,
 columns = list(
               track_name = colDef(name = "Track Name"),
